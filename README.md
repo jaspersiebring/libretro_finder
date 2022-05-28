@@ -5,9 +5,13 @@ This is useful if you source your BIOS files from many different places and have
 
 This repository does **NOT** include the BIOS files themselves.
 
-Only requires Python 3.6 (due to f-strings, type hinting, enum, etc.).
+Only requires Python 3.6 (due to f-strings, type hinting, enum, etc.) and should work on Windows, Linux and Mac.
 
 ### Example of usage:
+You can safely use the `system` directory of retroarch as `output_dir` since we also check existing files against the known hashes (we'll only dump them if they're not present yet).   
+````
+some_user@some_machine ~/repos/retroarch_bios_scraper python main.py ~/Downloads/bios_files/ ~/.config/retroarch/system/
+````
 ````
 some_user@some_machine ~/repos/retroarch_bios_scraper python main.py --help
 
@@ -24,6 +28,7 @@ optional arguments:
                         all keys) (default: 0)
   -v, --verbose         Increase verbosity (default: False)
 ````
+
 ### In case of duplicates, the user is asked to pick them from pre-formatted options
 ````
 some_user@some_machine ~/repos/retroarch_bios_scraper python main.py ~/Downloads/bios_files/ ~/.config/retroarch/system/ --glob *.bin
