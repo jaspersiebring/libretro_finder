@@ -1,7 +1,16 @@
 # RetroArch BIOS Scraper
-Local BIOS file scraper for Retroarch cores 
+Simple command line utility that looks for specific BIOS files for RetroArch cores and, if found, refactors them to the expected format (currently only includes Beetle PSX and Beetle PSX HW). 
 
+This is useful if you source your BIOS files from many different places and have them saved them under different names (often with duplicates). This script is able to find these exact BIOS files by comparing their hashes against their known counterparts (as nicely documented on the [Libretro docs](https://docs.libretro.com/library/beetle_psx/)). 
+
+This repository does **NOT** include the BIOS files themselves.
+
+Only requires Python 3.6 (due to f-strings, type hinting, enum, etc.).
+
+### Example of usage:
 ````
+some_user@some_machine ~/repos/retroarch_bios_scraper python main.py --help
+
 Local BIOS file scraper for Retroarch
 
 positional arguments:
@@ -14,10 +23,11 @@ optional arguments:
   -c CORE, --core CORE  Only look for BIOS files associated with a specific Retroarch core ({1: 'BEETLE_PSX', 2: 'BEETLE_PSX_HW'}, 0 is
                         all keys) (default: 0)
   -v, --verbose         Increase verbosity (default: False)
-```` 
-
-### Example of usage:
 ````
+### In case of duplicates, the user is asked to pick them from pre-formatted options
+````
+some_user@some_machine ~/repos/retroarch_bios_scraper python main.py ~/Downloads/bios_files/ ~/.config/retroarch/system/ --glob *.bin
+
 Multiple matches found for: BEETLE_PSX.PS1_EU_BIOS (scph5502.bin). Pick one from the following options:
 Option (a):
          NAME: PSX - SCPH5552.bin
@@ -35,7 +45,7 @@ Option (b):
 
 Option (c):
          NAME: scph5552.bin
-         DIR: C:\Users\jaspe\Downloads\misc
+         DIR: /home/some_user/Downloads/bios_files/
          SIZE: 512.0KiB (524288)
          CREATED: 2022-05-27 23:59:26.472520
          MODIFIED: 2022-05-27 23:46:38.752924
