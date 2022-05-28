@@ -1,0 +1,47 @@
+{
+  "BEETLE_PSX": {
+    "PS1_JP_BIOS": {
+      "filename": "scph5500.bin",
+      "md5sum": "8dd7d5296a650fac7319bce665a6a53c"
+    },
+    "PS1_US_BIOS": {
+      "filename": "scph5501.bin",
+      "md5sum": "490f666e1afb15b7362b406ed1cea246"
+    },
+    "PS1_EU_BIOS": {
+      "filename": "scph5502.bin",
+      "md5sum": "32736f17079d0b2b7024407c39bd3050"
+    },
+    "PS1_PSP_BIOS": {
+      "filename": "PSXONPSP660.bin",
+      "md5sum": "c53ca5908936d412331790f4426c6c33"
+    },
+    "PS1_PS3_BIOS": {
+      "filename": "ps1_rom.bin",
+      "md5sum": "81bbe60ba7a3d1cea1d48c14cbcc647b"
+    }
+  },
+  "BEETLE_PSX_HW": {
+    "PS1_JP_BIOS": {
+      "filename": "scph5500.bin",
+      "md5sum": "8dd7d5296a650fac7319bce665a6a53c"
+    },
+    "PS1_US_BIOS": {
+      "filename": "scph5501.bin",
+      "md5sum": "490f666e1afb15b7362b406ed1cea246"
+    },
+    "PS1_EU_BIOS": {
+      "filename": "scph5502.bin",
+      "md5sum": "32736f17079d0b2b7024407c39bd3050"
+    },
+    "PS1_PSP_BIOS": {
+      "filename": "PSXONPSP660.bin",
+      "md5sum": "c53ca5908936d412331790f4426c6c33"
+    },
+    "PS1_PS3_BIOS": {
+      "filename": "ps1_rom.bin",
+      "md5sum": "81bbe60ba7a3d1cea1d48c14cbcc647b"
+    }
+  }
+
+}
