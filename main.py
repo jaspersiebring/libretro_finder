@@ -156,9 +156,6 @@ def main(directory: pathlib.Path, output_dir: pathlib.Path, core_id: int = 0, gl
 if __name__ == "__main__":
     # TODO check file permissions (try except)
     # TODO Add verbosity levels (report on found and/or dumped files)
-    #rs_bios_scraper
-    #retroarch_local_scraper
-    #RetroArch BIOS Scraper
 
     parser = argparse.ArgumentParser(description="Local BIOS file scraper for Retroarch",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
