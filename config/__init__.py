@@ -1,14 +1,40 @@
-import json
-import os
-from .core_names import Core
+import pathlib
+import urllib.request
+import re
+import pandas as pd
 
+# not expecting BIOS files over 15mb
+MAX_BIOS_BYTES = 15728640
 
-# Contains BIOS filenames and md5 hashes from https://docs.libretro.com/
-json_path = os.path.join(os.path.dirname(__file__), "BIOS_SPECS.json")
+# Pulling all BIOS names and hashes from Libretro's system.dat (https://docs.libretro.com/)
+FILE_PATH =  pathlib.Path(__file__).parent / "system.dat"
+GITHUB_URL = "https://raw.githubusercontent.com/libretro/libretro-database/master/dat/System.dat"
+if not FILE_PATH.exists():
+    print("Getting BIOS names from libretro-database..")
+    urllib.request.urlretrieve(GITHUB_URL, FILE_PATH)
+    print("Done.")
 
-with open(json_path) as json_file:
-    BIOS_SPECS = json.load(json_file)
+# Parsing Libretro's system.dat and formatting as pandas dataframe
+index = 0
+SYSTEMS = []
+with open(FILE_PATH) as file:
+    for line in file:
+        line = line.strip()     
+        if line.startswith('comment'):
+            current_system = line.split('"')[1]    
+        elif line.startswith('rom'):
+            match = re.search(r'name (\S+)(?: size (\S+))?(?: crc (\S+))?(?: md5 (\S+))?(?: sha1 (\S+))?', line)
+            data = {
+                "system" : current_system,
+                "name" : match.group(1).replace('"', '').replace("'", ""),
+                "size" : match.group(2) if match.group(2) else None, 
+                "crc" : match.group(3) if match.group(3) else None, 
+                "md5" : match.group(4) if match.group(4) else None, 
+                "sha1" : match.group(5) if match.group(5) else None
+                }
+            SYSTEMS.append(pd.DataFrame(data, index = [index]))
+            index += 1
 
-all_cores = list(Core.__dict__['_member_map_'].values())
-all_cores = [c for c in all_cores if c.value != 0]
-core_dict = dict([[c.value, c.name] for c in all_cores])
+#join dfs and drop features without checksums
+SYSTEMS = pd.concat(SYSTEMS)
+SYSTEMS = SYSTEMS[~SYSTEMS['md5'].isnull()].reset_index(drop=True)
