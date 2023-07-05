@@ -1,0 +1,8 @@
+name: bscraper
+channels:
+  - defaults
+dependencies:
+  - python
+  - numpy
+  - pandas
+  - tqdm
