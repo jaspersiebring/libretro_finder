@@ -4,8 +4,7 @@ import pathlib
 import numpy as np
 import tqdm
 from config import SYSTEMS as system_df
-from libretro_scraper.utils import recursive_hash
-
+from libretro_finder.utils import recursive_hash
 
 def scrape_bios(directory: pathlib.Path, output_dir: pathlib.Path, glob: str = "*", overwrite=False):
     """
