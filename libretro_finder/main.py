@@ -1,13 +1,22 @@
 import argparse
 import shutil
 import pathlib
-from config import SYSTEMS as system_df
-from utils import recursive_hash
 import numpy as np
 import tqdm
+from config import SYSTEMS as system_df
+from libretro_scraper.utils import recursive_hash
 
 
 def scrape_bios(directory: pathlib.Path, output_dir: pathlib.Path, glob: str = "*", overwrite=False):
+    """
+
+    :param directory:
+    :param output_dir:
+    :param glob:
+    :param overwrite:
+    :return:
+    """
+
     output_dir.mkdir(parents=True, exist_ok=True)
     file_paths, file_hashes = recursive_hash(directory=directory, glob=glob)
     file_paths = np.array(file_paths)
@@ -45,14 +54,13 @@ def scrape_bios(directory: pathlib.Path, output_dir: pathlib.Path, glob: str = "
 if __name__ == "__main__":
     # TODO check file permissions
     # TODO show missing, system status/system support system_df.iloc[~system_indices]
-    # TODO add threading to shutil.copy
     # TODO Default output_dir to retroarch's system folder
     # TODO implement caching with redis (recursive_hash)
 
     parser = argparse.ArgumentParser(description="Local BIOS file scraper for Retroarch",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("search_dir", help="Directory to look for BIOS files", type = str)
-    parser.add_argument("output_dir", help="Directory to save found BIOS files to", type = str)
+    parser.add_argument("output_dir", help="Directory to copy found BIOS files to", type = str)
     parser.add_argument("-g", "--glob", help="Glob pattern to use for file matching", type = str, default="*")
     parser.add_argument("-o", "--overwrite", help="Overwrite output", action="store_true")
     args = vars(parser.parse_args())
@@ -62,6 +70,12 @@ if __name__ == "__main__":
     glob = args["glob"]
     overwrite = args["overwrite"]
     
+
+    # overwrite = True
+    # directory = pathlib.Path(r"D:\Games\Roms")
+    # glob = "*"
+    # output_dir = pathlib.Path(r"D:\Games\Roms\biostest")
+
     scrape_bios(
         directory=directory,
         output_dir=output_dir,
