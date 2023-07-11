@@ -130,3 +130,6 @@ dmypy.json
 
 # libretro's system.dat
 config/system.dat
+
+# .vscode config
+.vscode/
