@@ -1,7 +1,8 @@
 import pathlib
 import hashlib
 import concurrent.futures
-from typing import Tuple, List
+import numpy as np
+from typing import Tuple
 from config import MAX_BIOS_BYTES
 
 def hash_file(file_path: pathlib.Path) -> str:
@@ -15,7 +16,7 @@ def hash_file(file_path: pathlib.Path) -> str:
     hash = hashlib.md5(bytes)
     return hash.hexdigest()
 
-def recursive_hash(directory: pathlib.Path, glob: str = "*") -> Tuple[List[pathlib.Path], List[str]]:
+def recursive_hash(directory: pathlib.Path, glob: str = "*") -> Tuple[np.ndarray, np.ndarray]:
     """
 
     :param directory:
@@ -30,4 +31,30 @@ def recursive_hash(directory: pathlib.Path, glob: str = "*") -> Tuple[List[pathl
     with concurrent.futures.ThreadPoolExecutor() as executor:
         for hash in executor.map(hash_file, file_paths):
             file_hashes.append(hash)
-    return file_paths, file_hashes
+    return np.array(file_paths), np.array(file_hashes)
+
+
+def match_arrays(array_a: np.ndarray, array_b: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Element-wise array comparison, returns unique values and matching indices per input array
+
+    :param array_a:
+    :param array_b:
+    :return:
+    """
+
+    # expecting 1D arrays
+    if np.sum([len(array_a.shape), len(array_b.shape)]) > 2:
+        raise ValueError("input arrays need to be one-dimensional, exiting..")
+    
+    comparisons = np.equal(
+        array_a.reshape(1, -1), 
+        array_b.reshape(-1, 1)
+        )
+
+    indices_b, indices_a  = np.where(comparisons)
+    matching_values = np.unique(array_a[indices_a])
+
+    return matching_values, indices_a, indices_b
+
+    
