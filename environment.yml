@@ -6,3 +6,7 @@ dependencies:
   - numpy
   - pandas
   - tqdm
+  - faker
+  - pytest
+  - black
+  - pylint

@@ -5,6 +5,7 @@ import pandas as pd
 
 # not expecting BIOS files over 15mb
 MAX_BIOS_BYTES = 15728640
+SEED = 0
 
 # Pulling all BIOS names and hashes from Libretro's system.dat (https://docs.libretro.com/)
 FILE_PATH =  pathlib.Path(__file__).parent / "system.dat"
