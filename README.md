@@ -1,59 +1,64 @@
-# RetroArch BIOS Scraper
-Simple command line utility that looks for specific BIOS files for RetroArch cores and, if found, refactors them to the expected format (currently only includes Beetle PSX and Beetle PSX HW). 
-
-This is useful if you source your BIOS files from many different places and have them saved them under different names (often with duplicates). This script is able to find these exact BIOS files by comparing their hashes against their known counterparts (as nicely documented on the [Libretro docs](https://docs.libretro.com/library/beetle_psx/)). 
+# libretro_finder
+Simple command line utility that recursively looks for specific BIOS files for RetroArch cores and, if found, refactors them to the expected format as documented by Libretro [here](https://github.com/libretro/libretro-database/blob/4a98ea9726b3954a4e5a940d255bd14c307ddfba/dat/System.dat) (i.e. name and directory structure). This is useful if you source your BIOS files from many different places and have them saved them under different names (often with duplicates). This script is able to find these exact BIOS files by comparing their hashes against their known counterparts. Uses concurrency and vectorization for added performance.   
 
 This repository does **NOT** include the BIOS files themselves.
 
-Only requires Python 3.6 (due to f-strings, type hinting, enum, etc.) and should work on Windows, Linux and Mac.
+## Installation
+Available through the Python Package Index (PyPI):
 
-### Example of usage:
-You can safely use the `system` directory of retroarch as `output_dir` since we also check existing files against the known hashes (we'll only dump them if they're not present yet).   
 ````
-some_user@some_machine ~/repos/retroarch_bios_scraper python main.py ~/Downloads/bios_files/ ~/.config/retroarch/system/
+# with pip
+pip install libretro-finder
+
+# with poetry
+poetry add libretro-finder
 ````
+
+## Example of usage:
 ````
-some_user@some_machine ~/repos/retroarch_bios_scraper python main.py --help
+some_user@some_machine:~ libretro_finder ~/Downloads/bios_files/ ~/Downloads/libretro_bios
+
+89 matching BIOS files were found for 3 unique systems:
+        Sega - Mega Drive - Genesis (1)
+        Sony - PlayStation (19)
+        Sony - PlayStation 2 (69)
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 89/89 [00:00<00:00, 617.57it/s]
+````
+
+You can also safely use the `system` directory of retroarch as `output_dir` since we never overwrite files (i.e. libretro_finder only adds to your list of BIOS files)  
+````
+some_user@some_machine:~ libretro_finder ~/Downloads/bios_files/ ~/.config/retroarch/system/
+
+89 matching BIOS files were found for 3 unique systems:
+        Sega - Mega Drive - Genesis (1)
+        Sony - PlayStation (19)
+        Sony - PlayStation 2 (69)
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 89/89 [00:00<00:00, 617.57it/s]
+````
+
+You can also use libretro's `system` directory as `search_dir` to find all aliased BIOS files (i.e. identical BIOS files that are usable by different cores for the same system but just under different names). 
+
+````
+some_user@some_machine:~ libretro_finder ~/.config/retroarch/system/ ~/.config/retroarch/system/
+
+89 matching BIOS files were found for 3 unique systems:
+        Sega - Mega Drive - Genesis (1)
+        Sony - PlayStation (19)
+        Sony - PlayStation 2 (69)
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 89/89 [00:00<00:00, 617.57it/s]
+````
+
+Help page:
+````
+some_user@some_machine:~ libretro_finder --help
 
 Local BIOS file scraper for Retroarch
 
 positional arguments:
   search_dir            Directory to look for BIOS files
-  output_dir            Directory to save found BIOS files to
+  output_dir            Directory to refactor found BIOS files to
 
 optional arguments:
   -h, --help            show this help message and exit
-  -g GLOB, --glob GLOB  Directory to save found BIOS files to (default: *)
-  -c CORE, --core CORE  Only look for BIOS files associated with a specific Retroarch core ({1: 'BEETLE_PSX', 2: 'BEETLE_PSX_HW'}, 0 is
-                        all keys) (default: 0)
-  -v, --verbose         Increase verbosity (default: False)
-````
-
-### In case of duplicates, the user is asked to pick them from pre-formatted options
-````
-some_user@some_machine ~/repos/retroarch_bios_scraper python main.py ~/Downloads/bios_files/ ~/.config/retroarch/system/ --glob *.bin
-
-Multiple matches found for: BEETLE_PSX.PS1_EU_BIOS (scph5502.bin). Pick one from the following options:
-Option (a):
-         NAME: PSX - SCPH5552.bin
-         DIR: /home/some_user/Downloads/bios_files/
-         SIZE: 512.0KiB (524288)
-         CREATED: 2022-05-27 23:46:51.209432
-         MODIFIED: 2022-05-27 23:46:38.752924
-
-Option (b):
-         NAME: scph5552 (ps-30e).bin
-         DIR: /home/some_user/Downloads/bios_files/
-         SIZE: 512.0KiB (524288)
-         CREATED: 2022-05-27 22:52:46.061768
-         MODIFIED: 2021-04-24 12:23:07.038451
-
-Option (c):
-         NAME: scph5552.bin
-         DIR: /home/some_user/Downloads/bios_files/
-         SIZE: 512.0KiB (524288)
-         CREATED: 2022-05-27 23:59:26.472520
-         MODIFIED: 2022-05-27 23:46:38.752924
-
-Pick option (a-c):
+  -g GLOB, --glob GLOB  Glob pattern to use for file matching
 ````

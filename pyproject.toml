@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "libretro-finder"
+version = "0.1.0"
+description = "Command line utility that looks for specific BIOS files for libretro cores and, if found, refactors them to the expected format (i.e. name and directory structure)."
+authors = ["Jasper <j.siebring92@gmail.com>"]
+license = "GNU General Public License v3.0"
+readme = "README.md"
+packages = [
+    {include = "libretro_finder"},
+    {include = "config"},
+]
+
+[tool.poetry.scripts]
+libretro_finder = "libretro_finder.main:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^1.25.1"
+pandas = "^2.0.3"
+tqdm = "^4.65.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pylint = "^2.17.4"
+black = "^23.7.0"
+mypy = "^1.4.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = "C0114"
