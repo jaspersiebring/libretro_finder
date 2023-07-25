@@ -1,4 +1,10 @@
 # libretro_finder
+![PyPI](https://img.shields.io/pypi/v/libretro-finder)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/libretro-finder)
+![PyPI - License](https://img.shields.io/pypi/l/libretro-finder)
+![PyPI](https://img.shields.io/pypi/v/libretro-finder?link=https%3A%2F%2Fpypi.org%2Fproject%2Flibretro-finder%2F)
+
+
 Simple command line utility that recursively looks for specific BIOS files for RetroArch cores and, if found, refactors them to the expected format as documented by Libretro [here](https://github.com/libretro/libretro-database/blob/4a98ea9726b3954a4e5a940d255bd14c307ddfba/dat/System.dat) (i.e. name and directory structure). This is useful if you source your BIOS files from many different places and have them saved them under different names (often with duplicates). This script is able to find these exact BIOS files by comparing their hashes against their known counterparts. Uses concurrency and vectorization for added performance.   
 
 This repository does **NOT** include the BIOS files themselves.
