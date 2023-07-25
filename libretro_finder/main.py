@@ -7,12 +7,14 @@ import tqdm
 from config import SYSTEMS as system_df
 from libretro_finder.utils import match_arrays, recursive_hash
 
+
 def organize(
     search_dir: pathlib.Path, output_dir: pathlib.Path, glob: str = "*"
 ) -> None:
     """
-    Non-destructive function that finds, copies and refactors files to the format expected by libretro (and its cores).
-    This is useful if you source your BIOS files from many different places and have them saved them under different names (often with duplicates).
+    Non-destructive function that finds, copies and refactors files to the format expected by 
+    libretro (and its cores). This is useful if you source your BIOS files from many different 
+    places and have them saved them under different names (often with duplicates).
 
     :param search_dir:
     :param output_dir:
@@ -40,19 +42,20 @@ def organize(
     hashes = file_hashes[file_indices[indices]]
     system_subset = system_df.loc[system_indices[indices]]
 
-    # np.unique and array subsetting doesn't merit a dedicated function but it should still be tested
+    # np.unique and indexing doesn't merit a dedicated function but it should still be tested
     assert np.array_equal(np.array(system_subset["md5"].values), hashes)
     assert system_subset["name"].size == system_subset["name"].unique().size
 
     # printing matches per system
     matches = system_subset.groupby("system").count()
     print(
-        f"{matches['name'].sum()} matching BIOS files were found for {matches.shape[0]} unique systems:"
+        f"{matches['name'].sum()} matching BIOS files were found for {matches.shape[0]}" \
+        "unique systems:"
     )
     for name, row in matches.iterrows():
         print(f"\t{name} ({row['name']})")
 
-    # copying matching files to output_dir using structure specified by libretro (and expected by libretro cores)
+    # copying matching files to output_dir using structure specified by libretro
     dsts = system_subset["name"].values
 
     # checking whether our input and output paths are of equal length
@@ -63,7 +66,7 @@ def organize(
         parent = dst.parent
         if dst.exists() or srcs[i] == dst:
             continue
-        elif parent != output_dir:
+        if parent != output_dir:
             parent.mkdir(parents=True, exist_ok=True)
 
         shutil.copy(src=srcs[i], dst=dst)
@@ -71,7 +74,8 @@ def organize(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="CLI that finds, copies and refactors BIOS files to the format expected by libretro (and its cores).",
+        description="CLI that finds, copies and refactors BIOS files" \
+        "to the format expected by libretro.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("search_dir", help="Directory to look for BIOS files", type=str)

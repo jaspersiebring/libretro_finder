@@ -19,9 +19,9 @@ if not FILE_PATH.exists():
     print("Done.")
 
 # Parsing Libretro's system.dat and formatting as pandas dataframe
-index = 0
+index = 0 # pylint: disable=invalid-name
 SYSTEMS = []
-with open(FILE_PATH) as file:
+with open(FILE_PATH, "r", encoding='utf-8') as file:
     for line in file:
         line = line.strip()
         if line.startswith("comment"):
