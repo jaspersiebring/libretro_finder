@@ -171,3 +171,5 @@ class Test_organize:
     #     assert bios_lut.shape[0] == len(output_paths)
     #     assert np.all(np.isin(output_hashes, bios_lut["md5"].values))
     #     assert np.all(np.isin(bios_lut["name"].values, output_names))
+
+    # def test_argparser

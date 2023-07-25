@@ -11,7 +11,7 @@ packages = [
 ]
 
 [tool.poetry.scripts]
-libretro_finder = "libretro_finder.main"
+libretro_finder = "libretro_finder.main:main"
 
 [tool.poetry.dependencies]
 python = "^3.11"

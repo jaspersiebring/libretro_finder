@@ -12,8 +12,8 @@ def organize(
     search_dir: pathlib.Path, output_dir: pathlib.Path, glob: str = "*"
 ) -> None:
     """
-    Non-destructive function that finds, copies and refactors files to the format expected by 
-    libretro (and its cores). This is useful if you source your BIOS files from many different 
+    Non-destructive function that finds, copies and refactors files to the format expected by
+    libretro (and its cores). This is useful if you source your BIOS files from many different
     places and have them saved them under different names (often with duplicates).
 
     :param search_dir:
@@ -49,7 +49,7 @@ def organize(
     # printing matches per system
     matches = system_subset.groupby("system").count()
     print(
-        f"{matches['name'].sum()} matching BIOS files were found for {matches.shape[0]}" \
+        f"{matches['name'].sum()} matching BIOS files were found for {matches.shape[0]}"
         "unique systems:"
     )
     for name, row in matches.iterrows():
@@ -72,15 +72,16 @@ def organize(
         shutil.copy(src=srcs[i], dst=dst)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Simple argparse wrapper for packaging."""
     parser = argparse.ArgumentParser(
-        description="CLI that finds, copies and refactors BIOS files" \
+        description="CLI that finds, copies and refactors BIOS files "
         "to the format expected by libretro (i.e. name and directory structure).",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("search_dir", help="Directory to look for BIOS files", type=str)
     parser.add_argument(
-        "output_dir", help="Directory to copy found BIOS files to", type=str
+        "output_dir", help="Directory to refactor found BIOS files to", type=str
     )
     parser.add_argument(
         "-g",
@@ -89,9 +90,6 @@ if __name__ == "__main__":
         type=str,
         default="*",
     )
-    parser.add_argument(
-        "-o", "--overwrite", help="Overwrite output", action="store_true"
-    )
     args = vars(parser.parse_args())
 
     search_directory = pathlib.Path(args["search_dir"])
@@ -99,3 +97,7 @@ if __name__ == "__main__":
     search_glob = args["glob"]
 
     organize(search_dir=search_directory, output_dir=output_directory, glob=search_glob)
+
+
+if __name__ == "__main__":
+    main()
