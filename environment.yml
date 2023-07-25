@@ -1,12 +1,6 @@
 name: bscraper
 channels:
   - defaults
-dependencies:
-  - python
-  - numpy
-  - pandas
-  - tqdm
-  - faker
-  - pytest
-  - black
-  - pylint
+dependencies:l
+  - python=3.11
+  - poetry=1.4
