@@ -75,7 +75,7 @@ def organize(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="CLI that finds, copies and refactors BIOS files" \
-        "to the format expected by libretro.",
+        "to the format expected by libretro (i.e. name and directory structure).",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("search_dir", help="Directory to look for BIOS files", type=str)

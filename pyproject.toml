@@ -1,11 +1,17 @@
 [tool.poetry]
 name = "libretro-finder"
 version = "0.1.0"
-description = "Command line utility that looks for specific BIOS files for libretro cores and, if found, refactors them to the expected format as documented [here](https://github.com/libretro/libretro-database/blob/4a98ea9726b3954a4e5a940d255bd14c307ddfba/dat/System.dat)."
+description = "Command line utility that looks for specific BIOS files for libretro cores and, if found, refactors them to the expected format (i.e. name and directory structure)."
 authors = ["Jasper <j.siebring92@gmail.com>"]
 license = "GNU General Public License v3.0"
 readme = "README.md"
-packages = [{include = "libretro_finder"}]
+packages = [
+    {include = "libretro_finder"},
+    {include = "config"},
+]
+
+[tool.poetry.scripts]
+libretro_finder = "libretro_finder.main"
 
 [tool.poetry.dependencies]
 python = "^3.11"
