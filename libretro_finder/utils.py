@@ -2,7 +2,7 @@ import concurrent.futures
 import hashlib
 import pathlib
 from typing import Tuple
-
+from tqdm import tqdm
 import numpy as np
 
 from config import MAX_BIOS_BYTES
@@ -34,12 +34,18 @@ def recursive_hash(
     file_paths = [
         file_path
         for file_path in file_paths
-        if file_path.stat().st_size <= MAX_BIOS_BYTES and file_path.is_file()
+        if file_path.exists()
+        and file_path.stat().st_size <= MAX_BIOS_BYTES
+        and file_path.is_file()
     ]
 
     file_hashes = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        for file_hash in executor.map(hash_file, file_paths):
+        for file_hash in tqdm(
+            executor.map(hash_file, file_paths),
+            total=len(file_paths),
+            desc="Hashing files",
+        ):
             file_hashes.append(file_hash)
     return np.array(file_paths), np.array(file_hashes)
 

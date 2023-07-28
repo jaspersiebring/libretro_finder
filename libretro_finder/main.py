@@ -2,7 +2,6 @@ import argparse
 import shutil
 import pathlib
 import numpy as np
-import tqdm
 
 from config import SYSTEMS as system_df
 from libretro_finder.utils import match_arrays, recursive_hash
@@ -49,7 +48,7 @@ def organize(
     # printing matches per system
     matches = system_subset.groupby("system").count()
     print(
-        f"{matches['name'].sum()} matching BIOS files were found for {matches.shape[0]}"
+        f"{matches['name'].sum()} matching BIOS files were found for {matches.shape[0]} "
         "unique systems:"
     )
     for name, row in matches.iterrows():
@@ -61,7 +60,7 @@ def organize(
     # checking whether our input and output paths are of equal length
     assert len(srcs) == len(dsts)
 
-    for i in tqdm.tqdm(range(srcs.size), total=srcs.size):
+    for i in range(srcs.size):
         dst = output_dir / dsts[i]
         parent = dst.parent
         if dst.exists() or srcs[i] == dst:
