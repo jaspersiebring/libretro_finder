@@ -4,12 +4,11 @@ import numpy as np
 from gooey import Gooey, GooeyParser
 
 from config import SYSTEMS as system_df
-from libretro_finder.utils import match_arrays, recursive_hash, RETROARCH_PATH
+from config import RETROARCH_PATH
+from libretro_finder.utils import match_arrays, recursive_hash
 
 
-def organize(
-    search_dir: pathlib.Path, output_dir: pathlib.Path
-) -> None:
+def organize(search_dir: pathlib.Path, output_dir: pathlib.Path) -> None:
     """
     Non-destructive function that finds, copies and refactors files to the format expected by
     libretro (and its cores). This is useful if you source your BIOS files from many different
@@ -69,26 +68,41 @@ def organize(
 
         shutil.copy(src=srcs[i], dst=dst)
 
-@Gooey(program_name="LibretroFinder")
+
+@Gooey(program_name="LibretroFinder", default_size=(610, 530), required_cols=1)
 def main() -> None:
     """Simple argparse wrapper for packaging."""
-    
+
     parser = GooeyParser(
-        description="CLI that finds, copies and refactors BIOS files "
-        "to the format expected by libretro (i.e. name and directory structure).",
+        description="Locate and prepare your BIOS files for libretro.",
     )
-    parser.add_argument("search_dir", help="Directory to look for BIOS files", type=str,  widget='DirChooser')
     parser.add_argument(
-        "output_dir", help="Directory to refactor found BIOS files to", type=str, widget='DirChooser', default = str(RETROARCH_PATH)
+        "Search directory",
+        help="Where to look for BIOS files",
+        type=pathlib.Path,
+        widget="DirChooser",
+    )
+    parser.add_argument(
+        "Output directory",
+        help="Where to output refactored BIOS files (defaults to ./retroarch/system)",
+        type=pathlib.Path,
+        widget="DirChooser",
+        default=str(RETROARCH_PATH) if RETROARCH_PATH else None,
     )
     args = vars(parser.parse_args())
 
-    search_directory = pathlib.Path(args["search_dir"])
-    output_directory = pathlib.Path(args["output_dir"])
-    
+    search_directory = args["Search directory"]
+    output_directory = args["Output directory"]
+
+    if not search_directory.exists():
+        raise FileNotFoundError("Search directory does not exist..")
+    elif not search_directory.is_dir():
+        raise NotADirectoryError("Search directory needs to be a directory..")
 
     organize(search_dir=search_directory, output_dir=output_directory)
 
 
 if __name__ == "__main__":
     main()
+
+    #

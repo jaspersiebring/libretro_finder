@@ -3,9 +3,8 @@ import re
 import urllib.request
 
 import pandas as pd
+from libretro_finder.utils import find_retroarch
 
-# not expecting BIOS files over 15mb
-MAX_BIOS_BYTES = 15728640
 SEED = 0
 
 # Pulling all BIOS names and hashes from Libretro's system.dat (https://docs.libretro.com/)
@@ -19,9 +18,9 @@ if not FILE_PATH.exists():
     print("Done.")
 
 # Parsing Libretro's system.dat and formatting as pandas dataframe
-index = 0 # pylint: disable=invalid-name
+index = 0  # pylint: disable=invalid-name
 SYSTEMS = []
-with open(FILE_PATH, "r", encoding='utf-8') as file:
+with open(FILE_PATH, "r", encoding="utf-8") as file:
     for line in file:
         line = line.strip()
         if line.startswith("comment"):
@@ -45,3 +44,6 @@ with open(FILE_PATH, "r", encoding='utf-8') as file:
 # join dfs and drop features without checksums
 SYSTEMS = pd.concat(SYSTEMS)
 SYSTEMS = SYSTEMS[~SYSTEMS["md5"].isnull()].reset_index(drop=True)
+
+# path to retroarch/system (if found)
+RETROARCH_PATH = find_retroarch()

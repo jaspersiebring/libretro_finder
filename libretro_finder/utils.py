@@ -2,14 +2,15 @@ import os
 import concurrent.futures
 import hashlib
 import pathlib
-from typing import Tuple, Optional, List
+from typing import Tuple, Optional, List, Union
 from tqdm import tqdm
 import numpy as np
 import vdf
 import platform
 from string import ascii_uppercase
 
-from config import MAX_BIOS_BYTES
+# not expecting BIOS files over 15mb
+MAX_BIOS_BYTES = 15728640
 
 
 def hash_file(file_path: pathlib.Path) -> str:
@@ -87,57 +88,66 @@ def check_env_var(var_name: str) -> Optional[str]:
     Returns:
         Optional[str]: The value of the environment variable if it exists, None otherwise.
     """
-    
+
     if var_name in os.environ:
         return os.environ[var_name]
     else:
         return None
-    
+
+
 def list_steam_libraries(path: pathlib.Path) -> List[pathlib.Path]:
     library_paths = []
-    with open(path, 'r', encoding="utf-8") as src:
+    with open(path, "r", encoding="utf-8") as src:
         library_info = vdf.parse(src)
-        for key in library_info['libraryfolders'].keys():
-            library_path = pathlib.Path(library_info['libraryfolders'][key]['path'])
+        for key in library_info["libraryfolders"].keys():
+            library_path = pathlib.Path(library_info["libraryfolders"][key]["path"])
             if library_path.exists():
                 library_paths.append(library_path)
 
     return library_paths
 
+
 def find_retroarch() -> Optional[pathlib.Path]:
     paths_to_check = []
     system = platform.system()
-    print("Locating RetroArch..")
-        
+
     if system == "Windows":
         system_glob = "RetroArch*/system"
         # Non-Steam
-        drives = [pathlib.Path(f"{drive}:").resolve() for drive in ascii_uppercase if pathlib.Path(f"{drive}:").exists()]
+        drives = [
+            pathlib.Path(f"{drive}:").resolve()
+            for drive in ascii_uppercase
+            if pathlib.Path(f"{drive}:").exists()
+        ]
         for drive in drives:
             paths_to_check.append(drive)
-            
+
         env_vars = ["PROGRAMFILES(X86)", "PROGRAMFILES"]
-        for env_var in env_vars:    
-            env_var = check_env_var(var_name = env_var)
+        for env_var in env_vars:
+            env_var = check_env_var(var_name=env_var)
             env_path = pathlib.Path(env_var)
 
             if env_path.exists():
                 paths_to_check.append(env_path)
 
                 # adding steam libraries
-                vdf_path = env_path / pathlib.Path("Steam", "steamapps", "libraryfolders.vdf")
+                vdf_path = env_path / pathlib.Path(
+                    "Steam", "steamapps", "libraryfolders.vdf"
+                )
                 if vdf_path.exists():
                     for library_path in list_steam_libraries(path=vdf_path):
-                        paths_to_check.append(library_path / pathlib.Path("steamapps/common"))
+                        paths_to_check.append(
+                            library_path / pathlib.Path("steamapps/common")
+                        )
 
     elif system == "Linux":
         # system_glob = "retroarch/system"
         # home = pathlib.Path.home()
         # paths_to_check.append(home / pathlib.Path(".config"))
-        #Linux: ~/.local/share/Steam/steamapps/libraryfolders.vdf
+        # Linux: ~/.local/share/Steam/steamapps/libraryfolders.vdf
         raise NotImplementedError("To be implemented..")
     elif system == "Darwin":
-        #MacOS: ~/Library/Application Support/Steam/steamapps/libraryfolders.vdf
+        # MacOS: ~/Library/Application Support/Steam/steamapps/libraryfolders.vdf
         raise NotImplementedError("To be implemented..")
 
     # checking for retroarch/system (one level down)
@@ -146,6 +156,7 @@ def find_retroarch() -> Optional[pathlib.Path]:
         for path in path_to_check.glob(system_glob):
             return path
     return None
+
 
 # path to retroarch installation (if found)
 RETROARCH_PATH = find_retroarch()
