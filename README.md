@@ -7,6 +7,10 @@ Simple command line utility that recursively looks for specific BIOS files for R
 
 This repository does **NOT** include the BIOS files themselves.
 
+# GUI (preview)
+![image](https://github.com/jaspersiebring/libretro_finder/assets/25051531/d7bd3e1a-80fd-441f-a425-0bd5623d1e72)
+
+
 ## Installation
 Available through the Python Package Index (PyPI):
 
