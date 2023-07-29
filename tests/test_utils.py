@@ -8,7 +8,7 @@ import pandas as pd
 import pytest
 from pytest import TempdirFactory, TempPathFactory
 
-from libretro_finder.utils import hash_file, match_arrays, recursive_hash
+from libretro_finder.utils import hash_file, match_arrays, recursive_hash, check_env_var
 from tests import TEST_BYTES, TEST_SAMPLE_SIZE
 from tests.fixtures import setup_files
 
@@ -134,3 +134,18 @@ class Test_match_arrays:
         assert np.size(matching_values) > 0
         assert np.all(np.isin(np.array(["a", "b"]), matching_values))
         assert np.array_equal(array_a[indices_a], array_b[indices_b])
+
+
+class Test_check_env_var:
+    def test_check_env_var_exists(self):
+        os.environ['TEST_VAR'] = 'test_value'
+        assert check_env_var('TEST_VAR') == 'test_value'
+
+    def test_check_env_var_not_exists(self):
+        if 'NON_EXISTENT_VAR' in os.environ:
+            del os.environ['NON_EXISTENT_VAR']
+        assert check_env_var('NON_EXISTENT_VAR') == None
+
+    def test_check_env_var_none(self):
+        with pytest.raises(TypeError):
+            check_env_var(None)

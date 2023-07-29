@@ -64,5 +64,4 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -g GLOB, --glob GLOB  Glob pattern to use for file matching
 ````

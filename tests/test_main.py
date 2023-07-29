@@ -34,7 +34,7 @@ class Test_organize:
         # swapping out system_df to the one generated from setup_files
         # this is needed because we can't include actual bios files for testing
         monkeypatch.setattr("libretro_finder.main.system_df", bios_lut)
-        organize(search_dir=bios_dir, output_dir=output_dir, glob="*")
+        organize(search_dir=bios_dir, output_dir=output_dir)
 
         # verifying correct output
         output_paths = list(output_dir.rglob(pattern="*"))
@@ -72,7 +72,7 @@ class Test_organize:
         assert len(output_paths) == 0
 
         # running organize with libretro's dataframe
-        organize(search_dir=bios_dir, output_dir=output_dir, glob="*")
+        organize(search_dir=bios_dir, output_dir=output_dir)
 
         # checking if still empty
         assert len(list(output_dir.rglob("*"))) == 0
@@ -90,7 +90,7 @@ class Test_organize:
         assert len(list(output_dir.rglob("*"))) == 0
 
         # checking if still empty
-        organize(search_dir=input_dir, output_dir=output_dir, glob="*")
+        organize(search_dir=input_dir, output_dir=output_dir)
         assert len(list(output_dir.rglob("*"))) == 0
 
     def test_same_input(
@@ -111,7 +111,7 @@ class Test_organize:
         # swapping out system_df to the one generated from setup_files
         # this is needed because we can't include actual bios files for testing
         monkeypatch.setattr("libretro_finder.main.system_df", bios_lut)
-        organize(search_dir=bios_dir, output_dir=bios_dir, glob="*")
+        organize(search_dir=bios_dir, output_dir=bios_dir)
 
         # verifying correct output
         output_paths = list(bios_dir.rglob(pattern="*"))

@@ -734,6 +734,18 @@ files = [
 ]
 
 [[package]]
+name = "vdf"
+version = "3.4"
+description = "Library for working with Valve's VDF text format"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "vdf-3.4-py2.py3-none-any.whl", hash = "sha256:68c1a125cc49e343d535af2dd25074e9cb0908c6607f073947c4a04bbe234534"},
+    {file = "vdf-3.4.tar.gz", hash = "sha256:fd5419f41e07a1009e5ffd027c7dcbe43d1f7e8ef453aeaa90d9d04b807de2af"},
+]
+
+[[package]]
 name = "wrapt"
 version = "1.15.0"
 description = "Module for decorators, wrappers and monkey patching."
@@ -852,4 +864,4 @@ six = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "e9652a0f60646f34b9b92677116a06acdd8fb2982b5499c475fba406b2f6303d"
+content-hash = "a330dc3081e05ea78c158a4bc1cfb5498743d720c96028942d0aece962372c18"

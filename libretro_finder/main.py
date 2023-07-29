@@ -1,14 +1,14 @@
-import argparse
 import shutil
 import pathlib
 import numpy as np
+from gooey import Gooey, GooeyParser
 
 from config import SYSTEMS as system_df
-from libretro_finder.utils import match_arrays, recursive_hash
+from libretro_finder.utils import match_arrays, recursive_hash, RETROARCH_PATH
 
 
 def organize(
-    search_dir: pathlib.Path, output_dir: pathlib.Path, glob: str = "*"
+    search_dir: pathlib.Path, output_dir: pathlib.Path
 ) -> None:
     """
     Non-destructive function that finds, copies and refactors files to the format expected by
@@ -17,14 +17,13 @@ def organize(
 
     :param search_dir:
     :param output_dir:
-    :param glob:
     :param overwrite:
     :return:
     """
 
     # Indexing files to be checked for matching MD5 checksums
     output_dir.mkdir(parents=True, exist_ok=True)
-    file_paths, file_hashes = recursive_hash(directory=search_dir, glob=glob)
+    file_paths, file_hashes = recursive_hash(directory=search_dir)
 
     # Element-wise matching of files against libretro's files
     matching_values, file_indices, system_indices = match_arrays(
@@ -70,32 +69,25 @@ def organize(
 
         shutil.copy(src=srcs[i], dst=dst)
 
-
+@Gooey(program_name="LibretroFinder")
 def main() -> None:
     """Simple argparse wrapper for packaging."""
-    parser = argparse.ArgumentParser(
+    
+    parser = GooeyParser(
         description="CLI that finds, copies and refactors BIOS files "
         "to the format expected by libretro (i.e. name and directory structure).",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("search_dir", help="Directory to look for BIOS files", type=str)
+    parser.add_argument("search_dir", help="Directory to look for BIOS files", type=str,  widget='DirChooser')
     parser.add_argument(
-        "output_dir", help="Directory to refactor found BIOS files to", type=str
-    )
-    parser.add_argument(
-        "-g",
-        "--glob",
-        help="Glob pattern to use for file matching",
-        type=str,
-        default="*",
+        "output_dir", help="Directory to refactor found BIOS files to", type=str, widget='DirChooser', default = str(RETROARCH_PATH)
     )
     args = vars(parser.parse_args())
 
     search_directory = pathlib.Path(args["search_dir"])
     output_directory = pathlib.Path(args["output_dir"])
-    search_glob = args["glob"]
+    
 
-    organize(search_dir=search_directory, output_dir=output_directory, glob=search_glob)
+    organize(search_dir=search_directory, output_dir=output_directory)
 
 
 if __name__ == "__main__":
