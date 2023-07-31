@@ -4,6 +4,8 @@ import stat
 import pytest
 import numpy as np
 from pytest import MonkeyPatch, TempdirFactory, TempPathFactory
+from pytest_mock import MockerFixture
+from pytest_mock import mocker
 
 from libretro_finder.main import organize, main
 from libretro_finder.utils import hash_file
@@ -127,3 +129,36 @@ class Test_organize:
         assert bios_lut.shape[0] == len(output_paths)
         assert np.all(np.isin(output_hashes, bios_lut["md5"].values))
         assert np.all(np.isin(bios_lut["name"].values, output_names))
+
+
+class Test_main:
+    def test_main(self, tmp_path: pathlib.Path, mocker: MockerFixture):
+        # Mocking the organize function to prevent actual file operations
+        mock_organize = mocker.patch('libretro_finder.main.organize')
+
+        search_dir = tmp_path / "search"
+        output_dir = tmp_path / "output"
+        search_dir.mkdir()
+        output_dir.mkdir()
+
+        argv = [str(search_dir), str(output_dir)]
+        main(argv)
+        mock_organize.assert_called_once_with(search_dir=search_dir, output_dir=output_dir)
+
+    def test_main_search_directory_not_exists(self, tmp_path: pathlib.Path):
+        output_dir = tmp_path / "output"
+        output_dir.mkdir()
+
+        argv = ['/path/to/nonexistent/search', str(output_dir)]
+        with pytest.raises(FileNotFoundError):
+            main(argv)
+
+    def test_main_search_directory_not_directory(self, tmp_path: pathlib.Path):
+        file_path = tmp_path / "search.txt"
+        output_dir = tmp_path / "output"
+        file_path.touch()
+        output_dir.mkdir()
+
+        argv = [str(file_path), str(output_dir)]
+        with pytest.raises(NotADirectoryError):
+            main(argv)

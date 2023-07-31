@@ -16,7 +16,7 @@ MAX_BIOS_BYTES = 15728640
 def hash_file(file_path: pathlib.Path) -> str:
     """
     This function calculates the MD5 hash of a file.
-    
+
     :param file_path:
     :return:
     """
@@ -65,7 +65,7 @@ def match_arrays(
 
     :param array_a: The first array to compare.
     :param array_b: The second array to compare.
-    :return: A tuple of three numpy arrays: unique matching values, indices of the matching values in 
+    :return: A tuple of three numpy arrays: unique matching values, indices of the matching values in
     array_a and indices of the matching values in array_b.
     """
 
@@ -106,7 +106,7 @@ def find_retroarch() -> Optional[pathlib.Path]:
 
     :return: The path to the RetroArch installation if found, None otherwise.
     """
-        
+
     paths_to_check = []
     system = platform.system()
 
@@ -142,14 +142,27 @@ def find_retroarch() -> Optional[pathlib.Path]:
                         )
 
     elif system == "Linux":
-        # system_glob = "retroarch/system"
-        # home = pathlib.Path.home()
-        # paths_to_check.append(home / pathlib.Path(".config"))
-        # Linux: ~/.local/share/Steam/steamapps/libraryfolders.vdf
-        raise NotImplementedError("To be implemented..")
+        system_glob = "retroarch/system"
+        home = pathlib.Path.home()
+        paths_to_check.append(home / pathlib.Path(".config"))
+        vdf_path = home / pathlib.Path(
+            ".local/share/Steam/steamapps/libraryfolders.vdf"
+        )
+        if vdf_path.exists():
+            for library_path in list_steam_libraries(vdf_path=vdf_path):
+                paths_to_check.append(library_path / pathlib.Path("steamapps/common"))
+
+    # requires more testing on actual metal
     elif system == "Darwin":
-        # MacOS: ~/Library/Application Support/Steam/steamapps/libraryfolders.vdf
-        raise NotImplementedError("To be implemented..")
+        system_glob = "RetroArch.app/Contents/Resources/system"
+        home = pathlib.Path.home()
+        paths_to_check.append(home / pathlib.Path("Library/Application Support"))
+        vdf_path = home / pathlib.Path(
+            "Library/Application Support/Steam/steamapps/libraryfolders.vdf"
+        )
+        if vdf_path.exists():
+            for library_path in list_steam_libraries(vdf_path=vdf_path):
+                paths_to_check.append(library_path / pathlib.Path("steamapps/common"))
 
     # checking for retroarch/system (one level down)
     for path_to_check in paths_to_check:
