@@ -1,3 +1,4 @@
+import sys
 import pathlib
 import re
 import urllib.request
@@ -47,3 +48,10 @@ SYSTEMS = SYSTEMS[~SYSTEMS["md5"].isnull()].reset_index(drop=True)
 
 # path to retroarch/system (if found)
 RETROARCH_PATH = find_retroarch()
+
+
+# 'cli' if user passes arguments else 'start gui'
+# Needs to be present before the @Gooey decorator (https://github.com/chriskiehl/Gooey/issues/449)
+if len(sys.argv) >= 2:
+    if not '--ignore-gooey' in sys.argv:
+        sys.argv.append('--ignore-gooey')

@@ -15,7 +15,8 @@ MAX_BIOS_BYTES = 15728640
 
 def hash_file(file_path: pathlib.Path) -> str:
     """
-
+    This function calculates the MD5 hash of a file.
+    
     :param file_path:
     :return:
     """
@@ -29,10 +30,11 @@ def recursive_hash(
     directory: pathlib.Path, glob: str = "*"
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
+    Calculate the MD5 hash for all files that match the glob pattern (recursively).
 
-    :param directory:
-    :param glob:
-    :return:
+    :param directory: Starting directory for the glob pattern matching
+    :param glob: The glob pattern to match files. Defaults to "*".
+    :return: An array with the file_paths to selected files and an array with the corresponding MD5 hashes
     """
 
     file_paths = list(directory.rglob(pattern=glob))
@@ -61,9 +63,10 @@ def match_arrays(
     """
     Element-wise array comparison, returns unique values and matching indices per input array
 
-    :param array_a:
-    :param array_b:
-    :return:
+    :param array_a: The first array to compare.
+    :param array_b: The second array to compare.
+    :return: A tuple of three numpy arrays: unique matching values, indices of the matching values in 
+    array_a and indices of the matching values in array_b.
     """
 
     # expecting 1D arrays
@@ -78,26 +81,16 @@ def match_arrays(
     return matching_values, indices_a, indices_b
 
 
-def check_env_var(var_name: str) -> Optional[str]:
+def list_steam_libraries(vdf_path: pathlib.Path) -> List[pathlib.Path]:
     """
-    This function checks if a specific environment variable exists in the system.
+    Getting paths to steam libraries from libraryfolders.vdf (Valve Data File)
 
-    Args:
-        var_name (str): The name of the environment variable to check.
-
-    Returns:
-        Optional[str]: The value of the environment variable if it exists, None otherwise.
+    :param vdf_path: The path to libraryfolders.vdf
+    :return: List of paths to Steam Library locations
     """
 
-    if var_name in os.environ:
-        return os.environ[var_name]
-    else:
-        return None
-
-
-def list_steam_libraries(path: pathlib.Path) -> List[pathlib.Path]:
     library_paths = []
-    with open(path, "r", encoding="utf-8") as src:
+    with open(vdf_path, "r", encoding="utf-8") as src:
         library_info = vdf.parse(src)
         for key in library_info["libraryfolders"].keys():
             library_path = pathlib.Path(library_info["libraryfolders"][key]["path"])
@@ -108,6 +101,12 @@ def list_steam_libraries(path: pathlib.Path) -> List[pathlib.Path]:
 
 
 def find_retroarch() -> Optional[pathlib.Path]:
+    """
+    Find the path to the RetroArch installation in the system.
+
+    :return: The path to the RetroArch installation if found, None otherwise.
+    """
+        
     paths_to_check = []
     system = platform.system()
 
@@ -124,7 +123,9 @@ def find_retroarch() -> Optional[pathlib.Path]:
 
         env_vars = ["PROGRAMFILES(X86)", "PROGRAMFILES"]
         for env_var in env_vars:
-            env_var = check_env_var(var_name=env_var)
+            env_var = os.environ.get(env_var)
+            if not env_var:
+                continue
             env_path = pathlib.Path(env_var)
 
             if env_path.exists():
@@ -135,7 +136,7 @@ def find_retroarch() -> Optional[pathlib.Path]:
                     "Steam", "steamapps", "libraryfolders.vdf"
                 )
                 if vdf_path.exists():
-                    for library_path in list_steam_libraries(path=vdf_path):
+                    for library_path in list_steam_libraries(vdf_path=vdf_path):
                         paths_to_check.append(
                             library_path / pathlib.Path("steamapps/common")
                         )
@@ -152,11 +153,7 @@ def find_retroarch() -> Optional[pathlib.Path]:
 
     # checking for retroarch/system (one level down)
     for path_to_check in paths_to_check:
-        # glob is needed for installers (e.g. RetroArch-Win32)
+        # glob is needed for inconsistent parent naming (e.g. RetroArch-Win32, RetroArch-Win64, retroarch)
         for path in path_to_check.glob(system_glob):
             return path
     return None
-
-
-# path to retroarch installation (if found)
-RETROARCH_PATH = find_retroarch()

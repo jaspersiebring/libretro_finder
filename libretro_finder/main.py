@@ -5,6 +5,7 @@ from gooey import Gooey, GooeyParser
 
 from config import SYSTEMS as system_df
 from config import RETROARCH_PATH
+from typing import List, Optional
 from libretro_finder.utils import match_arrays, recursive_hash
 
 
@@ -14,9 +15,8 @@ def organize(search_dir: pathlib.Path, output_dir: pathlib.Path) -> None:
     libretro (and its cores). This is useful if you source your BIOS files from many different
     places and have them saved them under different names (often with duplicates).
 
-    :param search_dir:
-    :param output_dir:
-    :param overwrite:
+    :param search_dir: starting location of recursive search
+    :param output_dir: path to output directory (will be created if it doesn't exist)
     :return:
     """
 
@@ -70,8 +70,12 @@ def organize(search_dir: pathlib.Path, output_dir: pathlib.Path) -> None:
 
 
 @Gooey(program_name="LibretroFinder", default_size=(610, 530), required_cols=1)
-def main() -> None:
-    """Simple argparse wrapper for packaging."""
+def main(argv : Optional[List[str]] = None) -> None:
+    """
+    A simple command line utility that finds and prepares your BIOS files for all documented 
+    RetroArch cores. If called without any arguments, a simple graphical user interface with 
+    the same functionality will be started (courtesy of Gooey).
+    """
 
     parser = GooeyParser(
         description="Locate and prepare your BIOS files for libretro.",
@@ -89,7 +93,7 @@ def main() -> None:
         widget="DirChooser",
         default=str(RETROARCH_PATH) if RETROARCH_PATH else None,
     )
-    args = vars(parser.parse_args())
+    args = vars(parser.parse_args(argv))
 
     search_directory = args["Search directory"]
     output_directory = args["Output directory"]
@@ -104,5 +108,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-    #
