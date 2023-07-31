@@ -53,5 +53,5 @@ RETROARCH_PATH = find_retroarch()
 # 'cli' if user passes arguments else 'start gui'
 # Needs to be present before the @Gooey decorator (https://github.com/chriskiehl/Gooey/issues/449)
 if len(sys.argv) >= 2:
-    if not '--ignore-gooey' in sys.argv:
-        sys.argv.append('--ignore-gooey')
+    if not "--ignore-gooey" in sys.argv:
+        sys.argv.append("--ignore-gooey")

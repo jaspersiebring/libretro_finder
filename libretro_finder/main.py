@@ -70,10 +70,10 @@ def organize(search_dir: pathlib.Path, output_dir: pathlib.Path) -> None:
 
 
 @Gooey(program_name="LibretroFinder", default_size=(610, 530), required_cols=1)
-def main(argv : Optional[List[str]] = None) -> None:
+def main(argv: Optional[List[str]] = None) -> None:
     """
-    A simple command line utility that finds and prepares your BIOS files for all documented 
-    RetroArch cores. If called without any arguments, a simple graphical user interface with 
+    A simple command line utility that finds and prepares your BIOS files for all documented
+    RetroArch cores. If called without any arguments, a simple graphical user interface with
     the same functionality will be started (courtesy of Gooey).
     """
 
