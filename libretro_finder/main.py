@@ -1,31 +1,28 @@
-import argparse
 import shutil
 import pathlib
 import numpy as np
-import tqdm
+from gooey import Gooey, GooeyParser
 
 from config import SYSTEMS as system_df
+from config import RETROARCH_PATH
+from typing import List, Optional
 from libretro_finder.utils import match_arrays, recursive_hash
 
 
-def organize(
-    search_dir: pathlib.Path, output_dir: pathlib.Path, glob: str = "*"
-) -> None:
+def organize(search_dir: pathlib.Path, output_dir: pathlib.Path) -> None:
     """
     Non-destructive function that finds, copies and refactors files to the format expected by
     libretro (and its cores). This is useful if you source your BIOS files from many different
     places and have them saved them under different names (often with duplicates).
 
-    :param search_dir:
-    :param output_dir:
-    :param glob:
-    :param overwrite:
+    :param search_dir: starting location of recursive search
+    :param output_dir: path to output directory (will be created if it doesn't exist)
     :return:
     """
 
     # Indexing files to be checked for matching MD5 checksums
     output_dir.mkdir(parents=True, exist_ok=True)
-    file_paths, file_hashes = recursive_hash(directory=search_dir, glob=glob)
+    file_paths, file_hashes = recursive_hash(directory=search_dir)
 
     # Element-wise matching of files against libretro's files
     matching_values, file_indices, system_indices = match_arrays(
@@ -49,7 +46,7 @@ def organize(
     # printing matches per system
     matches = system_subset.groupby("system").count()
     print(
-        f"{matches['name'].sum()} matching BIOS files were found for {matches.shape[0]}"
+        f"{matches['name'].sum()} matching BIOS files were found for {matches.shape[0]} "
         "unique systems:"
     )
     for name, row in matches.iterrows():
@@ -61,7 +58,7 @@ def organize(
     # checking whether our input and output paths are of equal length
     assert len(srcs) == len(dsts)
 
-    for i in tqdm.tqdm(range(srcs.size), total=srcs.size):
+    for i in range(srcs.size):
         dst = output_dir / dsts[i]
         parent = dst.parent
         if dst.exists() or srcs[i] == dst:
@@ -72,31 +69,41 @@ def organize(
         shutil.copy(src=srcs[i], dst=dst)
 
 
-def main() -> None:
-    """Simple argparse wrapper for packaging."""
-    parser = argparse.ArgumentParser(
-        description="CLI that finds, copies and refactors BIOS files "
-        "to the format expected by libretro (i.e. name and directory structure).",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument("search_dir", help="Directory to look for BIOS files", type=str)
-    parser.add_argument(
-        "output_dir", help="Directory to refactor found BIOS files to", type=str
-    )
-    parser.add_argument(
-        "-g",
-        "--glob",
-        help="Glob pattern to use for file matching",
-        type=str,
-        default="*",
-    )
-    args = vars(parser.parse_args())
+@Gooey(program_name="LibretroFinder", default_size=(610, 530), required_cols=1)
+def main(argv: Optional[List[str]] = None) -> None:
+    """
+    A simple command line utility that finds and prepares your BIOS files for all documented
+    RetroArch cores. If called without any arguments, a simple graphical user interface with
+    the same functionality will be started (courtesy of Gooey).
+    """
 
-    search_directory = pathlib.Path(args["search_dir"])
-    output_directory = pathlib.Path(args["output_dir"])
-    search_glob = args["glob"]
+    parser = GooeyParser(
+        description="Locate and prepare your BIOS files for libretro.",
+    )
+    parser.add_argument(
+        "Search directory",
+        help="Where to look for BIOS files",
+        type=pathlib.Path,
+        widget="DirChooser",
+    )
+    parser.add_argument(
+        "Output directory",
+        help="Where to output refactored BIOS files (defaults to ./retroarch/system)",
+        type=pathlib.Path,
+        widget="DirChooser",
+        default=str(RETROARCH_PATH) if RETROARCH_PATH else None,
+    )
+    args = vars(parser.parse_args(argv))
 
-    organize(search_dir=search_directory, output_dir=output_directory, glob=search_glob)
+    search_directory = args["Search directory"]
+    output_directory = args["Output directory"]
+
+    if not search_directory.exists():
+        raise FileNotFoundError("Search directory does not exist..")
+    elif not search_directory.is_dir():
+        raise NotADirectoryError("Search directory needs to be a directory..")
+
+    organize(search_dir=search_directory, output_dir=output_directory)
 
 
 if __name__ == "__main__":

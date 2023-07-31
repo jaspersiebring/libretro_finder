@@ -7,7 +7,7 @@ import tempfile
 
 import pandas as pd
 import pytest
-from pytest import TempdirFactory
+from pytest import TempPathFactory
 
 from config import SEED
 from config import SYSTEMS as system_df
@@ -15,11 +15,16 @@ from tests import TEST_SAMPLE_SIZE
 
 
 @pytest.fixture(scope="function")
-def setup_files(tmpdir_factory: TempdirFactory) -> Tuple[pathlib.Path, pd.DataFrame]:
-    """_summary_
+def setup_files(tmp_path_factory: TempPathFactory) -> Tuple[pathlib.Path, pd.DataFrame]:
+    """
+    Pytest fixture that creates a temporary directory, populates it with fake BIOS files and 
+    returns the path to said directory to be used in tests that expect BIOS files. The function 
+    also updates the reference pandas dataFrame with the CRC32, MD5, and SHA1 hashes of the 
+    dummy files (needed since hashes for the dummy files won't match the checksums for the actual 
+    BIOS files)
 
-    :param tmpdir_factory: _description_
-    :return: _description_
+    :param tmp_path_factory: A pytest fixture for creating temporary directories.
+    :return: A tuple containing the path to the temporary directory and the updated DataFrame.
     """
 
     dummy_bios_lut = (
@@ -28,7 +33,7 @@ def setup_files(tmpdir_factory: TempdirFactory) -> Tuple[pathlib.Path, pd.DataFr
         .reset_index(drop=True)
     )
 
-    temp_dir = tmpdir_factory.mktemp("bios")
+    temp_dir = tmp_path_factory.mktemp("bios")
     temp_output_dir = pathlib.Path(temp_dir)
 
     for index, row in dummy_bios_lut.iterrows():

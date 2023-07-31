@@ -18,15 +18,15 @@ def test_libretro_meta_import():
 
 
 class Test_hash_file:
-    def test_existing(self, tmp_path: TempPathFactory) -> None:
-        file_path = tmp_path / "some_file"  # type: ignore
+    def test_existing(self, tmp_path: pathlib.Path) -> None:
+        file_path = tmp_path / "some_file"
         random_bytes = os.urandom(TEST_BYTES)
 
         with open(file_path, "wb") as src:
             src.write(random_bytes)
         _ = hash_file(file_path)
 
-    def test_nonexistent(self, tmp_path) -> None:
+    def test_nonexistent(self, tmp_path: pathlib.Path) -> None:
         file_path = tmp_path / "some_file"
         with pytest.raises(FileNotFoundError):
             hash_file(file_path)
@@ -52,9 +52,9 @@ class Test_recursive_hash:
         assert np.array_equal(file_names[index_b], bios_lut["name"].values[index_a])
         assert np.array_equal(file_hashes[index_b], bios_lut["md5"].values[index_a])
 
-    def test_without_fixture(self, tmpdir_factory: TempdirFactory) -> None:
-        temp_dir = tmpdir_factory.mktemp("rhash")
-        temp_output_dir = pathlib.Path(temp_dir)
+    def test_without_fixture(self, tmp_path: pathlib.Path) -> None:
+        temp_output_dir = tmp_path / "rhash"
+        temp_output_dir.mkdir()
 
         file_names = [f"system_{i}.bin" for i in range(1, 11)]
         file_bytes = [os.urandom(TEST_BYTES * i) for i in range(1, 11)]
