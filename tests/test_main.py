@@ -1,11 +1,11 @@
 import os
 import pathlib
 import stat
-
+import pytest
 import numpy as np
-from pytest import MonkeyPatch, TempdirFactory
+from pytest import MonkeyPatch, TempdirFactory, TempPathFactory
 
-from libretro_finder.main import organize
+from libretro_finder.main import organize, main
 from libretro_finder.utils import hash_file
 from tests import TEST_SAMPLE_SIZE
 from tests.fixtures import setup_files
@@ -13,7 +13,7 @@ from tests.fixtures import setup_files
 
 class Test_organize:
     def test_matching(
-        self, setup_files, tmpdir_factory: TempdirFactory, monkeypatch: MonkeyPatch
+        self, setup_files, tmp_path: pathlib.Path, monkeypatch: MonkeyPatch
     ) -> None:
         bios_dir, bios_lut = setup_files
         assert bios_dir.exists()
@@ -24,8 +24,8 @@ class Test_organize:
         assert len(file_paths) == TEST_SAMPLE_SIZE
 
         # making output_dir
-        temp_dir = tmpdir_factory.mktemp("test_matching")
-        output_dir = pathlib.Path(temp_dir)
+        output_dir = tmp_path / "test_matching"
+        output_dir.mkdir()
 
         # checking if currently empty
         output_paths = list(output_dir.rglob(pattern="*"))
@@ -52,7 +52,7 @@ class Test_organize:
         assert np.all(np.isin(output_hashes, bios_lut["md5"].values))
         assert np.all(np.isin(bios_lut["name"].values, output_names))
 
-    def test_non_matching(self, setup_files, tmpdir_factory: TempdirFactory) -> None:
+    def test_non_matching(self, setup_files, tmp_path: pathlib.Path) -> None:
         # pretty much matching but we don't monkeypatch so we're comparing different hashes
         # same as 'matching' test but without monkeypatching (i.e. different hashes so no matches)
         bios_dir, _ = setup_files
@@ -64,8 +64,8 @@ class Test_organize:
         assert len(file_paths) == TEST_SAMPLE_SIZE
 
         # making output_dir
-        temp_dir = tmpdir_factory.mktemp("test_non_matching")
-        output_dir = pathlib.Path(temp_dir)
+        output_dir = tmp_path / "test_non_matching"
+        output_dir.mkdir()
 
         # checking if currently empty
         output_paths = list(output_dir.rglob(pattern="*"))
@@ -77,11 +77,11 @@ class Test_organize:
         # checking if still empty
         assert len(list(output_dir.rglob("*"))) == 0
 
-    def test_empty(self, tmpdir_factory: TempdirFactory) -> None:
-        temp_input_dir = tmpdir_factory.mktemp("input")
-        temp_output_dir = tmpdir_factory.mktemp("output")
-        input_dir = pathlib.Path(temp_input_dir)
-        output_dir = pathlib.Path(temp_output_dir)
+    def test_empty(self, tmp_path: pathlib.Path) -> None:
+        input_dir = tmp_path / "input"
+        output_dir = tmp_path / "output"
+        input_dir.mkdir()
+        output_dir.mkdir()
 
         # checking if exists but empty
         assert input_dir.exists()
@@ -94,7 +94,7 @@ class Test_organize:
         assert len(list(output_dir.rglob("*"))) == 0
 
     def test_same_input(
-        self, setup_files, tmpdir_factory: TempdirFactory, monkeypatch: MonkeyPatch
+        self, setup_files, monkeypatch: MonkeyPatch
     ) -> None:
         # organize but with (prepopulated) bios_dir as input and output
         # verifies if non-additive

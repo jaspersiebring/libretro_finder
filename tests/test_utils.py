@@ -8,7 +8,7 @@ import pandas as pd
 import pytest
 from pytest import TempdirFactory, TempPathFactory
 
-from libretro_finder.utils import hash_file, match_arrays, recursive_hash, check_env_var
+from libretro_finder.utils import hash_file, match_arrays, recursive_hash
 from tests import TEST_BYTES, TEST_SAMPLE_SIZE
 from tests.fixtures import setup_files
 
@@ -18,15 +18,15 @@ def test_libretro_meta_import():
 
 
 class Test_hash_file:
-    def test_existing(self, tmp_path: TempPathFactory) -> None:
-        file_path = tmp_path / "some_file"  # type: ignore
+    def test_existing(self, tmp_path: pathlib.Path) -> None:
+        file_path = tmp_path / "some_file"
         random_bytes = os.urandom(TEST_BYTES)
 
         with open(file_path, "wb") as src:
             src.write(random_bytes)
         _ = hash_file(file_path)
 
-    def test_nonexistent(self, tmp_path) -> None:
+    def test_nonexistent(self, tmp_path: pathlib.Path) -> None:
         file_path = tmp_path / "some_file"
         with pytest.raises(FileNotFoundError):
             hash_file(file_path)
@@ -52,9 +52,9 @@ class Test_recursive_hash:
         assert np.array_equal(file_names[index_b], bios_lut["name"].values[index_a])
         assert np.array_equal(file_hashes[index_b], bios_lut["md5"].values[index_a])
 
-    def test_without_fixture(self, tmpdir_factory: TempdirFactory) -> None:
-        temp_dir = tmpdir_factory.mktemp("rhash")
-        temp_output_dir = pathlib.Path(temp_dir)
+    def test_without_fixture(self, tmp_path: pathlib.Path) -> None:
+        temp_output_dir = tmp_path / "rhash"
+        temp_output_dir.mkdir()
 
         file_names = [f"system_{i}.bin" for i in range(1, 11)]
         file_bytes = [os.urandom(TEST_BYTES * i) for i in range(1, 11)]
@@ -134,18 +134,3 @@ class Test_match_arrays:
         assert np.size(matching_values) > 0
         assert np.all(np.isin(np.array(["a", "b"]), matching_values))
         assert np.array_equal(array_a[indices_a], array_b[indices_b])
-
-
-class Test_check_env_var:
-    def test_check_env_var_exists(self):
-        os.environ['TEST_VAR'] = 'test_value'
-        assert check_env_var('TEST_VAR') == 'test_value'
-
-    def test_check_env_var_not_exists(self):
-        if 'NON_EXISTENT_VAR' in os.environ:
-            del os.environ['NON_EXISTENT_VAR']
-        assert check_env_var('NON_EXISTENT_VAR') == None
-
-    def test_check_env_var_none(self):
-        with pytest.raises(TypeError):
-            check_env_var(None)
