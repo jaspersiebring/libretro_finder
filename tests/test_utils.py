@@ -12,10 +12,11 @@ from libretro_finder.utils import hash_file, match_arrays, recursive_hash
 from tests import TEST_BYTES, TEST_SAMPLE_SIZE
 from tests.fixtures import setup_files
 
-
 def test_libretro_meta_import():
     from config import SYSTEMS
 
+def test_dummy():
+    assert True
 
 class Test_hash_file:
     def test_existing(self, tmp_path: pathlib.Path) -> None:
