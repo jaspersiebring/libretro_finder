@@ -1,0 +1,64 @@
+name: Poetry caching
+on: [push]
+jobs:
+  Poetry-Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Installing Poetry globally
+        run: pipx install poetry
+      - name: Installing Python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - uses: actions/cache@v3
+        with:
+          path: /home/runner/.cache/pypoetry/virtualenvs
+          key: poetry-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            poetry-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
+            poetry-${{ steps.setup-python.outputs.python-version }}-
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            dpkg-dev \
+            build-essential \
+            freeglut3-dev \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libgstreamer-plugins-base1.0-dev \
+            libgtk-3-dev \
+            libjpeg-dev \
+            libnotify-dev \
+            libpng-dev \
+            libsdl2-dev \
+            libsm-dev \
+            libunwind-dev \
+            libtiff-dev \
+            libwebkit2gtk-4.0-dev \
+            libxtst-dev \
+            libgtk2.0-dev      
+      - name: Installing Poetry environment
+        run: poetry install
+      - name: Running pytest
+        id: pytest
+        run: poetry run pytest -v
+      - name: Running mypy
+        id: mypy
+        run: poetry run mypy libretro_finder/ config/ tests/
+      - name: Running pylint
+        id: pylint
+        run: poetry run pylint libretro_finder/ config/ tests/
+      - name: Checking code coverage
+        id: coverage
+        run: poetry run pytest --cov=config --cov=libretro_finder
+      - name: Poetry Build
+        id: build
+        run: poetry build
+        if: steps.pytest.outcome == 'success'
+      - name: Show artifacts
+        run: ls dist/
+        if: steps.build.outcome == 'success'
