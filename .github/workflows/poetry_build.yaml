@@ -37,8 +37,17 @@ jobs:
       - name: Installing Poetry environment
         run: poetry install
       - name: Running pytest
+        id: pytest
         run: poetry run pytest -v
       - name: Running mypy
+        id: mypy
         run: poetry run mypy libretro_finder/ config/ tests/
       - name: Running pylint
+        id: pylint
         run: poetry run pylint libretro_finder/ config/ tests/
+      - name: Poetry Build
+        id: build
+        run: poetry build
+        if: steps.pytest.outcome == 'success' && steps.mpy.outcome == 'success' && steps.pylint.outcome == 'success'
+      - name: Show artifacts
+        run: ls dist/
