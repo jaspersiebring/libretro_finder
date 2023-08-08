@@ -7,9 +7,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
       - name: Installing Poetry
-        uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: 1.4
+        run: pipx install poetry
       - name: Installing Python
         uses: actions/setup-python@v4
         with:
