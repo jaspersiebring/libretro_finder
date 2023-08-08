@@ -45,6 +45,9 @@ jobs:
       - name: Running pylint
         id: pylint
         run: poetry run pylint libretro_finder/ config/ tests/
+      - name: Checking code coverage
+        id: coverage
+        run: poetry run pytest --cov=config --cov=libretro_finder
       - name: Poetry Build
         id: build
         run: poetry build
