@@ -447,6 +447,22 @@ test = ["hypothesis (>=6.34.2)", "pytest (>=7.3.2)", "pytest-asyncio (>=0.17.0)"
 xml = ["lxml (>=4.6.3)"]
 
 [[package]]
+name = "pandas-stubs"
+version = "2.0.2.230605"
+description = "Type annotations for pandas"
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pandas_stubs-2.0.2.230605-py3-none-any.whl", hash = "sha256:39106b602f3cb6dc5f728b84e1b32bde6ecf41ee34ee714c66228009609fbada"},
+    {file = "pandas_stubs-2.0.2.230605.tar.gz", hash = "sha256:624c7bb06d38145a44b61be459ccd19b038e0bf20364a025ecaab78fea65e858"},
+]
+
+[package.dependencies]
+numpy = ">=1.24.3"
+types-pytz = ">=2022.1.1"
+
+[[package]]
 name = "pathspec"
 version = "0.11.1"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -842,6 +858,30 @@ slack = ["slack-sdk"]
 telegram = ["requests"]
 
 [[package]]
+name = "types-pytz"
+version = "2023.3.0.0"
+description = "Typing stubs for pytz"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-pytz-2023.3.0.0.tar.gz", hash = "sha256:ecdc70d543aaf3616a7e48631543a884f74205f284cefd6649ddf44c6a820aac"},
+    {file = "types_pytz-2023.3.0.0-py3-none-any.whl", hash = "sha256:4fc2a7fbbc315f0b6630e0b899fd6c743705abe1094d007b0e612d10da15e0f3"},
+]
+
+[[package]]
+name = "types-tqdm"
+version = "4.65.0.2"
+description = "Typing stubs for tqdm"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-tqdm-4.65.0.2.tar.gz", hash = "sha256:ad07ee08e758cad04299543b2586ef1d3fd5a10c54271457de13e0cba009cc5d"},
+    {file = "types_tqdm-4.65.0.2-py3-none-any.whl", hash = "sha256:956d92e921651309ffe36a783cc10d41d753f107c84e82d84373c84d68737246"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.7.1"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -996,4 +1036,4 @@ six = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.13"
-content-hash = "d32e3cc909ccd2fc2758726be5fba2cc9988663ff7b9fe7287c2ae1fd90c9eb8"
+content-hash = "4477a64438c7401c2f2a678dcf4cdebe36371aac2291fe42066c0d154692cdca"

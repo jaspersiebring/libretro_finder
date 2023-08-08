@@ -3,7 +3,6 @@ import hashlib
 import os
 import pathlib
 from typing import Tuple
-import tempfile
 
 import pandas as pd
 import pytest
@@ -17,10 +16,10 @@ from tests import TEST_SAMPLE_SIZE
 @pytest.fixture(scope="function")
 def setup_files(tmp_path_factory: TempPathFactory) -> Tuple[pathlib.Path, pd.DataFrame]:
     """
-    Pytest fixture that creates a temporary directory, populates it with fake BIOS files and 
-    returns the path to said directory to be used in tests that expect BIOS files. The function 
-    also updates the reference pandas dataFrame with the CRC32, MD5, and SHA1 hashes of the 
-    dummy files (needed since hashes for the dummy files won't match the checksums for the actual 
+    Pytest fixture that creates a temporary directory, populates it with fake BIOS files and
+    returns the path to said directory to be used in tests that expect BIOS files. The function
+    also updates the reference pandas dataFrame with the CRC32, MD5, and SHA1 hashes of the
+    dummy files (needed since hashes for the dummy files won't match the checksums for the actual
     BIOS files)
 
     :param tmp_path_factory: A pytest fixture for creating temporary directories.

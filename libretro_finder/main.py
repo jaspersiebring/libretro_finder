@@ -1,11 +1,10 @@
 import shutil
 import pathlib
+from typing import List, Optional
 import numpy as np
-from gooey import Gooey, GooeyParser
-
+from gooey import Gooey, GooeyParser  # type: ignore
 from config import SYSTEMS as system_df
 from config import RETROARCH_PATH
-from typing import List, Optional
 from libretro_finder.utils import match_arrays, recursive_hash
 
 
@@ -17,7 +16,6 @@ def organize(search_dir: pathlib.Path, output_dir: pathlib.Path) -> None:
 
     :param search_dir: starting location of recursive search
     :param output_dir: path to output directory (will be created if it doesn't exist)
-    :return:
     """
 
     # Indexing files to be checked for matching MD5 checksums
@@ -100,7 +98,7 @@ def main(argv: Optional[List[str]] = None) -> None:
 
     if not search_directory.exists():
         raise FileNotFoundError("Search directory does not exist..")
-    elif not search_directory.is_dir():
+    if not search_directory.is_dir():
         raise NotADirectoryError("Search directory needs to be a directory..")
 
     organize(search_dir=search_directory, output_dir=output_directory)
