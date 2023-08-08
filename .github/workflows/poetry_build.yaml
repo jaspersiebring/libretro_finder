@@ -6,16 +6,16 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - name: Echo current working directory
-        run: |
-          pwd
+      - name: Installing Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.4
       - name: Installing Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
+          cache: poetry
+          cache-dependency-path: poetry.lock
       - name: Install dependencies
         run: |
           sudo apt update
@@ -36,11 +36,7 @@ jobs:
             libtiff-dev \
             libwebkit2gtk-4.0-dev \
             libxtst-dev \
-            libgtk2.0-dev
-      - name: Installing Poetry
-        uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: 1.4
+            libgtk2.0-dev      
       - name: Installing Poetry environment
         run: poetry install
       - name: Running pytest
