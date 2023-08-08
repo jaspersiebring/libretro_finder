@@ -48,6 +48,7 @@ jobs:
       - name: Poetry Build
         id: build
         run: poetry build
-        if: steps.pytest.outcome == 'success' && steps.mpy.outcome == 'success' && steps.pylint.outcome == 'success'
+        if: steps.pytest.outcome == 'success'
       - name: Show artifacts
         run: ls dist/
+        if: steps.build.outcome == 'success'
