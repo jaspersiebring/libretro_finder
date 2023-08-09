@@ -31,6 +31,7 @@ jobs:
           sudo apt install -y \
             dpkg-dev \
             build-essential \
+            python3-dev \
             freeglut3-dev \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
@@ -41,11 +42,9 @@ jobs:
             libpng-dev \
             libsdl2-dev \
             libsm-dev \
-            libunwind-dev \
             libtiff-dev \
             libwebkit2gtk-4.0-dev \
             libxtst-dev \
-            libgtk2.0-dev      
 
       - name: Installing Poetry environment
         run: poetry install
