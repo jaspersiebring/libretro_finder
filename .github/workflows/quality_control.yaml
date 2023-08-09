@@ -55,4 +55,10 @@ jobs:
         run: poetry run pylint libretro_finder/ config/ tests/
       - name: Checking code coverage
         id: coverage
-        run: poetry run pytest --cov=config --cov=libretro_finder
+        run: poetry run pytest --cov=config --cov=libretro_finder --cov-fail-under=75
+      - name: echo step status
+        run: | 
+          echo ${{ steps.pytest.outcome }}
+          echo ${{ steps.mypy.outcome }}
+          echo ${{ steps.pylint.outcome }}
+          echo ${{ steps.coverage.outcome }}
