@@ -2,12 +2,13 @@ import os
 import concurrent.futures
 import hashlib
 import pathlib
-from typing import Tuple, Optional, List, Union
-from tqdm import tqdm
-import numpy as np
-import vdf
+from typing import Tuple, Optional, List
 import platform
 from string import ascii_uppercase
+from tqdm import tqdm
+import numpy as np
+import vdf  # type: ignore
+
 
 # not expecting BIOS files over 15mb
 MAX_BIOS_BYTES = 15728640
@@ -34,7 +35,7 @@ def recursive_hash(
 
     :param directory: Starting directory for the glob pattern matching
     :param glob: The glob pattern to match files. Defaults to "*".
-    :return: An array with the file_paths to selected files and an array with the corresponding MD5 hashes
+    :return: array with file_paths to selected files and an array with corresponding MD5 hashes
     """
 
     file_paths = list(directory.rglob(pattern=glob))
@@ -65,8 +66,8 @@ def match_arrays(
 
     :param array_a: The first array to compare.
     :param array_b: The second array to compare.
-    :return: A tuple of three numpy arrays: unique matching values, indices of the matching values in
-    array_a and indices of the matching values in array_b.
+    :return: A tuple of three numpy arrays: unique matching values, indices of the matching values
+    in array_a and indices of the matching values in array_b.
     """
 
     # expecting 1D arrays
@@ -123,10 +124,10 @@ def find_retroarch() -> Optional[pathlib.Path]:
 
         env_vars = ["PROGRAMFILES(X86)", "PROGRAMFILES"]
         for env_var in env_vars:
-            env_var = os.environ.get(env_var)
-            if not env_var:
+            env_value = os.environ.get(env_var)
+            if not env_value:
                 continue
-            env_path = pathlib.Path(env_var)
+            env_path = pathlib.Path(env_value)
 
             if env_path.exists():
                 paths_to_check.append(env_path)
@@ -166,7 +167,7 @@ def find_retroarch() -> Optional[pathlib.Path]:
 
     # checking for retroarch/system (one level down)
     for path_to_check in paths_to_check:
-        # glob is needed for inconsistent parent naming (e.g. RetroArch-Win32, RetroArch-Win64, retroarch)
+        # glob is needed for inconsistent parent naming (e.g. RetroArch-Win32, retroarch)
         for path in path_to_check.glob(system_glob):
             return path
     return None

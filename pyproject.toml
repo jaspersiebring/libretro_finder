@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "libretro-finder"
-version = "0.2.1"
-description = "Command line utility that looks for specific BIOS files for libretro cores and, if found, refactors them to the expected format (i.e. name and directory structure)."
+version = "0.2.2"
+description = "Simple tool that finds and prepares your BIOS files for usage with Libretro (or its RetroArch frontend)."
 authors = ["Jasper Siebring <j.siebring92@gmail.com>"]
 license = "GNU General Public License v3.0"
 homepage = "https://github.com/jaspersiebring/libretro_finder"
@@ -29,10 +29,14 @@ black = "^23.7.0"
 mypy = "^1.4.1"
 pyinstaller = "^5.13.0"
 pytest-mock = "^3.11.1"
+pandas-stubs = "^2.0.2.230605"
+types-tqdm = "^4.65.0.2"
+pytest-cov = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pylint.'MESSAGES CONTROL']
-disable = "C0114"
+disable = "C0114, R0912, R0914"
+max-line-length = 100
