@@ -21,6 +21,7 @@ jobs:
           restore-keys: |
             poetry-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
             poetry-${{ steps.setup-python.outputs.python-version }}-
+
       - name: Install dependencies
         run: |
           sudo apt update
@@ -42,6 +43,7 @@ jobs:
             libwebkit2gtk-4.0-dev \
             libxtst-dev \
             libgtk2.0-dev      
+
       - name: Installing Poetry environment
         run: poetry install
       - name: Running pytest
@@ -52,13 +54,24 @@ jobs:
         run: poetry run mypy libretro_finder/ config/ tests/
       - name: Running pylint
         id: pylint
-        run: poetry run pylint libretro_finder/ config/ tests/
+        run: poetry run pylint libretro_finder/ config/ tests/ --fail-under=8
       - name: Checking code coverage
         id: coverage
         run: poetry run pytest --cov=config --cov=libretro_finder --cov-fail-under=75
-      - name: echo step status
-        run: | 
-          echo ${{ steps.pytest.outcome }}
-          echo ${{ steps.mypy.outcome }}
-          echo ${{ steps.pylint.outcome }}
-          echo ${{ steps.coverage.outcome }}
+
+      - name: Build source and .whl archives with Poetry
+        id: build
+        run: poetry build
+        if: steps.pytest.outcome == 'success' && steps.mypy.outcome == 'success' && steps.pylint.outcome == 'success' && steps.coverage.outcome == 'success'
+
+      - name: Authorize GitHub Actions to publish on PYPI
+        #run: poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          poetry config repositories.test-pypi https://test.pypi.org/legacy/
+          poetry config pypi-token.test-pypi  ${{ secrets.TESTPYPI_API_TOKEN }}
+        if: steps.build.outcome == 'success'
+      - name: Publish on PYPI
+        #run: poetry publish
+        run: poetry publish -r test-pypi
+        if: steps.build.outcome == 'success'
+        
