@@ -17,14 +17,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
-      - uses: actions/cache@v3
-        with:
-          path: /home/runner/.cache/pypoetry/virtualenvs
-          key: poetry-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
-          restore-keys: |
-            poetry-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('poetry.lock') }}
-            poetry-${{ steps.setup-python.outputs.python-version }}-
-
+          cache: 'poetry'
+          
       - name: Install dependencies
         run: |
           sudo apt update
