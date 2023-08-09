@@ -2,6 +2,8 @@
 [![PyPI](https://img.shields.io/pypi/v/libretro-finder)](https://pypi.org/project/libretro-finder/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/libretro-finder)
 ![PyPI - License](https://img.shields.io/pypi/l/libretro-finder)
+[![Build passing (main)](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml/badge.svg?branch=main&event=push)](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml)
+
 
 Simple tool that finds and prepares your BIOS files for usage with Libretro (or its RetroArch frontend).  
 
@@ -89,5 +91,5 @@ If `libretro_finder` is called without any additional arguments, LibretroFinder 
 
 
 ### Missing features? Have some feedback? Let me know!
-- [My Reddit account](https://www.reddit.com/user/qtieb/)
-- [My Github account](https://github.com/jaspersiebring)
+- [Open a Github issue](https://github.com/jaspersiebring)
+- [Message me on Reddit ](https://www.reddit.com/user/qtieb/)
