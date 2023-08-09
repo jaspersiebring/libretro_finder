@@ -1,9 +1,6 @@
-name: Quality control and automated release
+name: Build and release on TestPyPi
 on:
-  pull_request: # Pull request events (default: open, synchronized, reopened) in any branch triggers the workflow.
-  push:
-    branches:
-      - main # Pushes to main (i.e. after a merged PR)
+  workflow_dispatch: # Manual trigger (dev)
 jobs:
   checks_and_release:
     runs-on: ubuntu-latest
@@ -68,8 +65,10 @@ jobs:
         if: steps.pytest.outcome == 'success' && steps.mypy.outcome == 'success' && steps.pylint.outcome == 'success' && steps.coverage.outcome == 'success'
 
       - name: Authorize GitHub Actions to publish on PYPI
-        run: poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
-        if: steps.build.outcome == 'success' && github.event_name == 'push'
+        run: |
+          poetry config repositories.test-pypi https://test.pypi.org/legacy/
+          poetry config pypi-token.test-pypi  ${{ secrets.TESTPYPI_API_TOKEN }}
+        if: steps.build.outcome == 'success'
       - name: Publish on PYPI
-        run: poetry publish
-        if: steps.build.outcome == 'success' && github.event_name == 'push'
+        run: poetry publish -r test-pypi
+        if: steps.build.outcome == 'success'
