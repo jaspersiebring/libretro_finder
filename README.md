@@ -91,5 +91,5 @@ If `libretro_finder` is called without any additional arguments, LibretroFinder 
 
 
 ### Missing features? Have some feedback? Let me know!
-- [Open a Github issue](https://github.com/jaspersiebring)
+- [Open a Github issue](https://github.com/jaspersiebring/libretro_finder/issues)
 - [Message me on Reddit ](https://www.reddit.com/user/qtieb/)
