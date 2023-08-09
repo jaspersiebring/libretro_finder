@@ -32,6 +32,7 @@ pytest-mock = "^3.11.1"
 pandas-stubs = "^2.0.2.230605"
 types-tqdm = "^4.65.0.2"
 pytest-cov = "^4.1.0"
+pytest-checkdocs = "^2.10.1"
 
 [build-system]
 requires = ["poetry-core"]
