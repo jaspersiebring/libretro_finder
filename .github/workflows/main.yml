@@ -42,6 +42,7 @@ jobs:
             libpng-dev \
             libsdl2-dev \
             libsm-dev \
+            libunwind-dev \
             libtiff-dev \
             libwebkit2gtk-4.0-dev \
             libxtst-dev \
