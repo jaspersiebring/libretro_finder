@@ -34,6 +34,25 @@ pandas-stubs = "^2.0.2.230605"
 types-tqdm = "^4.65.0.2"
 pytest-cov = "^4.1.0"
 
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[[tool.poetry.source]]
+name = "wxPythonExtras_2204"
+url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/"
+priority = "supplemental"
+
+[[tool.poetry.source]]
+name = "wxPythonExtras_2004"
+url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/"
+priority = "supplemental"
+
+[[tool.poetry.source]]
+name = "wxPythonExtras_1804"
+url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/"
+priority = "supplemental"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
