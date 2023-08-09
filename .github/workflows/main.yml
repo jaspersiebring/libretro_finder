@@ -1,8 +1,11 @@
-name: Quality control (pytest, mpy, pylint and cov)
+name: Quality control and automated release
 on:
   pull_request: # Pull request events (default: open, synchronized, reopened) in any branch triggers the workflow.
+  push:
+    branches:
+      - main # Pushes to main (i.e. after a merged PR)
 jobs:
-  Quality-Control:
+  checks_and_release:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -69,9 +72,8 @@ jobs:
         run: |
           poetry config repositories.test-pypi https://test.pypi.org/legacy/
           poetry config pypi-token.test-pypi  ${{ secrets.TESTPYPI_API_TOKEN }}
-        if: steps.build.outcome == 'success'
+        if: steps.build.outcome == 'success' && github.event_name == 'push'
       - name: Publish on PYPI
         #run: poetry publish
         run: poetry publish -r test-pypi
-        if: steps.build.outcome == 'success'
-        
+        if: steps.build.outcome == 'success' && github.event_name == 'push'
