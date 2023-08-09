@@ -1,5 +1,6 @@
-name: Poetry testing
-on: [push]
+name: Manual build
+on: 
+  workflow_dispatch:
 jobs:
   Poetry-Build:
     runs-on: ubuntu-latest

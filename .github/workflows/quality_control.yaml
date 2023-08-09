@@ -1,7 +1,8 @@
-name: Poetry caching
-on: [push]
+name: Quality control (pytest, mpy, pylint and cov)
+on:
+  pull_request: # Pull request events (default: open, synchronized, reopened) in any branch triggers the workflow.
 jobs:
-  Poetry-Build:
+  Quality-Control:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -55,10 +56,3 @@ jobs:
       - name: Checking code coverage
         id: coverage
         run: poetry run pytest --cov=config --cov=libretro_finder
-      - name: Poetry Build
-        id: build
-        run: poetry build
-        if: steps.pytest.outcome == 'success'
-      - name: Show artifacts
-        run: ls dist/
-        if: steps.build.outcome == 'success'
