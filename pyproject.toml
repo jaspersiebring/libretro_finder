@@ -21,7 +21,10 @@ pandas = ">=1.1.5"
 tqdm = "^4.65.0"
 gooey = "^1.0.8.1"
 vdf = "^3.4"
-wxpython = "^4.1.0"
+wxPython = [
+    { version = "^4.2.1", markers = "sys_platform == 'win32'" },
+    { markers = "sys_platform == 'linux' and python_version == '3.8'", url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/wxPython-4.2.1-cp38-cp38-linux_x86_64.whl" }
+]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
@@ -33,25 +36,6 @@ pytest-mock = "^3.11.1"
 pandas-stubs = "^2.0.2.230605"
 types-tqdm = "^4.65.0.2"
 pytest-cov = "^4.1.0"
-
-[[tool.poetry.source]]
-name = "PyPI"
-priority = "primary"
-
-[[tool.poetry.source]]
-name = "wxPythonExtras_2204"
-url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/"
-priority = "supplemental"
-
-[[tool.poetry.source]]
-name = "wxPythonExtras_2004"
-url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/"
-priority = "supplemental"
-
-[[tool.poetry.source]]
-name = "wxPythonExtras_1804"
-url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/"
-priority = "supplemental"
 
 [build-system]
 requires = ["poetry-core"]
