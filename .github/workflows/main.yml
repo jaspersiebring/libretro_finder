@@ -49,6 +49,9 @@ jobs:
 
       - name: Installing Poetry environment
         run: poetry install
+      - name: Setting tag to package version
+        run: |
+          echo "VERSION=$(poetry version | awk '{print $2}')" >> $GITHUB_ENV
       - name: Running pytest
         id: pytest
         run: poetry run pytest -v
@@ -66,9 +69,21 @@ jobs:
         id: build
         run: poetry build
         if: steps.pytest.outcome == 'success' && steps.mypy.outcome == 'success' && steps.pylint.outcome == 'success' && steps.coverage.outcome == 'success'
+
       - name: Authorize GitHub Actions to publish on PYPI
         run: poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
         if: steps.build.outcome == 'success' && github.event_name == 'push'
       - name: Publish on PYPI
         run: poetry publish
         if: steps.build.outcome == 'success' && github.event_name == 'push'
+      - name: Make executable from wheel
+        run: poetry run pyinstaller ./build.spec
+        id: freeze
+        if: steps.build.outcome == 'success' && github.event_name == 'push'
+      - name: Publish on Github
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+          tag_name: ${{ env.VERSION }}
+          prerelease: false
+        if: steps.build.outcome == 'success' && github.event_name == 'push' && steps.freeze.outcome == 'success'
