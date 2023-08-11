@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "libretro-finder"
-version = "0.2.3"
+version = "0.2.5"
 description = "Simple tool that finds and prepares your BIOS files for usage with Libretro (or its RetroArch frontend)."
 authors = ["Jasper Siebring <j.siebring92@gmail.com>"]
 license = "GNU General Public License v3.0"
