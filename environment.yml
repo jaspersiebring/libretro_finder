@@ -1,6 +1,6 @@
 name: bscraper
 channels:
-  - defaults
+  - conda-forge
 dependencies:
-  - python=3.11
-  - poetry=1.4
+  - python=3.8
+  - poetry>=1.5
