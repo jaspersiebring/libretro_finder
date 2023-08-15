@@ -34,11 +34,7 @@ pip install libretro-finder
 # [Optional] Install as isolated application through pipx (https://pypa.github.io/pipx/)
 pipx install libretro-finder
 ````
-You can also download the prebuilt standalone executable which includes Python and all the program's dependencies, no installation required (currently only available for X86 Windows machines). See [releases](https://github.com/jaspersiebring/libretro_finder/releases).
-
-<p float="left">
-  <img src="https://github.com/jaspersiebring/libretro_finder/assets/25051531/3ee6056c-0311-4071-8423-2b120ffff68e" width="150" height = 130/>
-</p>
+You can also download the standalone executables for Windows, Ubuntu and MacOS. This already contains all of the program's dependencies, no installation required. See [releases](https://github.com/jaspersiebring/libretro_finder/releases).
 
 ## Example of usage
 
