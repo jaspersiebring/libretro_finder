@@ -1,8 +1,9 @@
 # libretro_finder
 [![PyPI](https://img.shields.io/pypi/v/libretro-finder)](https://pypi.org/project/libretro-finder/)
+[![Downloads](https://static.pepy.tech/badge/libretro-finder)](https://pepy.tech/project/libretro-finder)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/libretro-finder)
 ![PyPI - License](https://img.shields.io/pypi/l/libretro-finder)
-[![Build passing (main)](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml/badge.svg?branch=main&event=push)](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml)
+[![Build passing](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml/badge.svg)](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml)
 
 
 Simple tool that finds and prepares your BIOS files for usage with Libretro (or its RetroArch frontend).  
@@ -16,7 +17,7 @@ This repository does **NOT** include the BIOS files themselves.
 - Scriptable command line interface (CLI)
 - Works on Windows, Linux and MacOS
 - Available through the Python Package Index (Python >=3.8) 
-- Available as portable executable (currently only on X86 Windows machines)
+- Available as portable executable (no installation required)
 
 
 <p float="left">
@@ -34,11 +35,7 @@ pip install libretro-finder
 # [Optional] Install as isolated application through pipx (https://pypa.github.io/pipx/)
 pipx install libretro-finder
 ````
-You can also download the prebuilt standalone executable which includes Python and all the program's dependencies, no installation required (currently only available for X86 Windows machines). See [releases](https://github.com/jaspersiebring/libretro_finder/releases).
-
-<p float="left">
-  <img src="https://github.com/jaspersiebring/libretro_finder/assets/25051531/3ee6056c-0311-4071-8423-2b120ffff68e" width="150" height = 130/>
-</p>
+You can also download the standalone executables for Windows, Ubuntu and MacOS. This already contains all of the program's dependencies, no installation required. See [releases](https://github.com/jaspersiebring/libretro_finder/releases).
 
 ## Example of usage
 
