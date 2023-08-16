@@ -105,7 +105,7 @@ jobs:
         if: ${{ needs.build.outputs.PASSED_BUILD }} == 'success'
       - name: Upload all artifacts to Github 
         uses: softprops/action-gh-release@v1
-        if: steps.collect.outcome == 'success' && ${{ needs.build.outputs.PASSED_BUILD }} == 'success'
+        if: steps.collect.outcome == 'success'
         with:
           files: ${{ needs.build.outputs.RELEASE_NAME }}/*
           tag_name: ${{ needs.build.outputs.RELEASE_VERSION }}
