@@ -63,12 +63,12 @@ jobs:
         run: poetry run pylint libretro_finder/ config/ tests/ --fail-under=8
       - name: Checking code coverage
         id: coverage
-        run: poetry run pytest --cov=config --cov=libretro_finder --cov-fail-under=75
+        run: poetry run pytest --cov=config --cov=libretro_finder --cov-fail-under=75 --cov-report=xml
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        if: steps.pytest.outcome == 'success' && steps.mypy.outcome == 'success' && steps.pylint.outcome == 'success' && steps.coverage.outcome == 'success'
+        if: matrix.os == 'ubuntu-latest'
       
       - name: Build source and .whl archives with Poetry
         id: build
