@@ -1,8 +1,9 @@
 # libretro_finder
 [![PyPI](https://img.shields.io/pypi/v/libretro-finder)](https://pypi.org/project/libretro-finder/)
+[![Downloads](https://static.pepy.tech/badge/libretro-finder)](https://pepy.tech/project/libretro-finder)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/libretro-finder)
 ![PyPI - License](https://img.shields.io/pypi/l/libretro-finder)
-[![Build passing (main)](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml/badge.svg?branch=main&event=push)](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml)
+[![Build passing](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml/badge.svg)](https://github.com/jaspersiebring/libretro_finder/actions/workflows/main.yml)
 
 
 Simple tool that finds and prepares your BIOS files for usage with Libretro (or its RetroArch frontend).  
@@ -16,7 +17,7 @@ This repository does **NOT** include the BIOS files themselves.
 - Scriptable command line interface (CLI)
 - Works on Windows, Linux and MacOS
 - Available through the Python Package Index (Python >=3.8) 
-- Available as portable executable (currently only on X86 Windows machines)
+- Available as portable executable (no installation required)
 
 
 <p float="left">

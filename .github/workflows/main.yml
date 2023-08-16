@@ -84,11 +84,11 @@ jobs:
         if: steps.build.outcome == 'success'
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
+        if: steps.build.outcome == 'success'
         with:
           name: ${{ env.RELEASE_NAME }}
           path: dist/*
-        if: steps.build.outcome == 'success'
-
+              
     outputs:
       RELEASE_NAME: ${{ env.RELEASE_NAME }}
       RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
@@ -97,6 +97,7 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Collect all artifacts
         uses: actions/download-artifact@v3
@@ -104,8 +105,11 @@ jobs:
         if: ${{ needs.build.outputs.PASSED_BUILD }} == 'success'
       - name: Upload all artifacts to Github 
         uses: softprops/action-gh-release@v1
+        if: steps.collect.outcome == 'success' && ${{ needs.build.outputs.PASSED_BUILD }} == 'success'
         with:
           files: ${{ needs.build.outputs.RELEASE_NAME }}/*
           tag_name: ${{ needs.build.outputs.RELEASE_VERSION }}
           prerelease: false
-        if: steps.collect.outcome == 'success' && ${{ needs.build.outputs.PASSED_BUILD }} == 'success'
+        
+
+
