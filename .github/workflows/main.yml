@@ -20,9 +20,9 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
-              
+
       - name: Installing Poetry environment
-        run: poetry install
+        run: poetry install --verbose
 
       - name: echo poetry
         run : cat poetry.lock
