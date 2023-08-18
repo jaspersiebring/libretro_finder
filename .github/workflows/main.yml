@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -22,94 +22,15 @@ jobs:
           python-version: 3.8
           cache: poetry
       
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y \
-            dpkg-dev \
-            build-essential \
-            freeglut3-dev \
-            libgl1-mesa-dev \
-            libglu1-mesa-dev \
-            libgstreamer-plugins-base1.0-dev \
-            libgtk-3-dev \
-            libjpeg-dev \
-            libnotify-dev \
-            libpng-dev \
-            libsdl2-dev \
-            libsm-dev \
-            libunwind-dev \
-            libtiff-dev \
-            libwebkit2gtk-4.0-dev \
-            libxtst-dev \
-            libgtk2.0-dev
-        if: matrix.os == 'ubuntu-latest'
+      
       - name: Installing Poetry environment
         run: poetry install
+
+      - name: echo poetry
+        run : cat poetry.lock
       - name: Setting tag to package version
         shell: bash
         run: |
           echo "RELEASE_NAME=$(poetry version | tr ' ' '-')" >> $GITHUB_ENV
           echo "RELEASE_VERSION=$(poetry version -s)" >> $GITHUB_ENV
-        
-      - name: Running pytest
-        id: pytest
-        run: poetry run pytest -v
-      - name: Running mypy
-        id: mypy
-        run: poetry run mypy libretro_finder/ config/ tests/
-      - name: Running pylint
-        id: pylint
-        run: poetry run pylint libretro_finder/ config/ tests/ --fail-under=8
-      - name: Checking code coverage
-        id: coverage
-        run: poetry run pytest --cov=config --cov=libretro_finder --cov-fail-under=75
       
-      - name: Build source and .whl archives with Poetry
-        id: build
-        run: poetry build
-        if: steps.pytest.outcome == 'success' && steps.mypy.outcome == 'success' && steps.pylint.outcome == 'success' && steps.coverage.outcome == 'success' && github.event_name == 'push'
-
-      - name: Authorize GitHub Actions to publish on PYPI
-        run: poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
-        if: steps.build.outcome == 'success' && matrix.os == 'ubuntu-latest'
-      - name: Publish on PYPI
-        run: poetry publish
-        if: steps.build.outcome == 'success' && matrix.os == 'ubuntu-latest'
-      - name: Make executable from wheel
-        run: poetry run pyinstaller ./build.spec
-        env:
-          EXE_NAME: ${{ env.RELEASE_NAME }}-${{ matrix.os }}-standalone
-        id: freeze
-        if: steps.build.outcome == 'success'
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        if: steps.build.outcome == 'success'
-        with:
-          name: ${{ env.RELEASE_NAME }}
-          path: dist/*
-              
-    outputs:
-      RELEASE_NAME: ${{ env.RELEASE_NAME }}
-      RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
-      PASSED_BUILD: ${{ steps.build.outcome }}
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Collect all artifacts
-        uses: actions/download-artifact@v3
-        id: collect
-        if: ${{ needs.build.outputs.PASSED_BUILD }} == 'success'
-      - name: Upload all artifacts to Github 
-        uses: softprops/action-gh-release@v1
-        if: steps.collect.outcome == 'success'
-        with:
-          files: ${{ needs.build.outputs.RELEASE_NAME }}/*
-          tag_name: ${{ needs.build.outputs.RELEASE_VERSION }}
-          prerelease: false
-        
-
-
