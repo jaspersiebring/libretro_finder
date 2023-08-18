@@ -1,4 +1,5 @@
-# libretro_finder
+![g222](https://github.com/jaspersiebring/libretro_finder/assets/25051531/fbe3ed2d-a855-44b2-9103-a4835449f068)
+
 [![PyPI](https://img.shields.io/pypi/v/libretro-finder)](https://pypi.org/project/libretro-finder/)
 [![Downloads](https://static.pepy.tech/badge/libretro-finder)](https://pepy.tech/project/libretro-finder)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/libretro-finder)
