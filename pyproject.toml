@@ -14,16 +14,6 @@ packages = [
 [tool.poetry.scripts]
 libretro_finder = "libretro_finder.main:main"
 
-[[tool.poetry.source]]
-name = "extras-wxpython-2204"
-url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/"
-priority = "supplemental"
-
-[[tool.poetry.source]]
-name = "extras-wxpython-2004"
-url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/"
-priority = "supplemental"
-
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
 gooey = "^1.0.8.1"
@@ -41,6 +31,17 @@ pytest-cov = "^4.1.0"
 pyinstaller = "^6.3.0"
 pandas-stubs = "^2.1.4.231218"
 types-tqdm = "^4.66.0.5"
+
+[[tool.poetry.source]]
+name = "extras-wxpython-2004"
+url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/"
+priority = "supplemental"
+
+
+[[tool.poetry.source]]
+name = "extras-wxpython-2204"
+url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/"
+priority = "supplemental"
 
 [build-system]
 requires = ["poetry-core"]
