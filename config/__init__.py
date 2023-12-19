@@ -33,6 +33,7 @@ with open(FILE_PATH, "r", encoding="utf-8") as file:
         if match:
             data = match.groupdict()
             data["system"] = current_system
+            data["name"] = data["name"].replace('"', "")
             system_series.append(data)
 
 # join dfs and drop features without checksums
