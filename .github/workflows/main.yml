@@ -19,7 +19,7 @@ jobs:
         id: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.9
           cache: poetry
       
       - name: Install dependencies
@@ -59,8 +59,8 @@ jobs:
         id: mypy
         run: poetry run mypy libretro_finder/ config/ tests/
       - name: Running pylint
-        id: pylint
-        run: poetry run pylint libretro_finder/ config/ tests/ --fail-under=8
+        id: ruff
+        run: $ poetry run ruff check libretro_finder/ config/ tests/
       - name: Checking code coverage
         id: coverage
         run: poetry run pytest --cov=config --cov=libretro_finder --cov-fail-under=75
