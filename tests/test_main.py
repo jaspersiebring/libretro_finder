@@ -3,12 +3,11 @@ import pathlib
 import pytest
 import numpy as np
 from pytest import MonkeyPatch
-from pytest_mock import MockerFixture, mocker  # pylint: disable=unused-import
+from pytest_mock import MockerFixture  # pylint: disable=unused-import
 
 from libretro_finder.main import organize, main
 from libretro_finder.utils import hash_file
 from tests import TEST_SAMPLE_SIZE
-from tests.fixtures import setup_files  # pylint: disable=unused-import
 
 
 class TestOrganize:

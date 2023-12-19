@@ -10,12 +10,10 @@ import pytest
 
 from libretro_finder.utils import hash_file, match_arrays, recursive_hash
 from tests import TEST_BYTES, TEST_SAMPLE_SIZE
-from tests.fixtures import setup_files  # pylint: disable=unused-import
 
 
 def test_libretro_meta_import():
     """verifies that (remote) libretro-database can pulled, parsed and dumped to pandas DataFrame"""
-    from config import SYSTEMS  # pylint: disable=W0611,C0415
 
 
 class TestHashFile:
