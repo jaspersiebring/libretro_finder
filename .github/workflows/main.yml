@@ -46,7 +46,10 @@ jobs:
             libsdl2-dev \
             libunwind-dev \
             libgtk2.0-dev
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-22.04'
+      - name: Manually download wxPython wheel for Ubuntu 22.04 (prevents lengthy build)
+        run: $(poetry run which pip) install -U -f  https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/ wxPython==4.2.1
+        if: matrix.os == 'ubuntu-22.04'
       - name: Installing Poetry environment
         run: poetry install
       - name: Setting tag to package version
@@ -75,10 +78,10 @@ jobs:
 
       - name: Authorize GitHub Actions to publish on PYPI
         run: poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
-        if: steps.build.outcome == 'success' && matrix.os == 'ubuntu-latest'
+        if: steps.build.outcome == 'success' && matrix.os == 'ubuntu-22.04'
       - name: Publish on PYPI
         run: poetry publish
-        if: steps.build.outcome == 'success' && matrix.os == 'ubuntu-latest'
+        if: steps.build.outcome == 'success' && matrix.os == 'ubuntu-22.04'
       - name: Make executable from wheel
         run: poetry run pyinstaller ./build.spec
         env:
@@ -99,7 +102,7 @@ jobs:
 
   release:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Collect all artifacts
