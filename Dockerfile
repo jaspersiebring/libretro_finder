@@ -31,8 +31,8 @@ RUN python3 -m venv $POETRY_HOME && $POETRY_HOME/bin/pip install poetry
 ENV PATH="/opt/poetry/bin:${PATH}"
 
 # Installing libretro_finder's deps
-#RUN poetry config installer.max-workers 10
-#RUN poetry install
+RUN poetry config installer.max-workers 10
+RUN poetry install
 
 # Default start
 CMD ["/bin/bash"]
