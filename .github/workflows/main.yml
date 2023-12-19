@@ -71,7 +71,7 @@ jobs:
       - name: Build source and .whl archives with Poetry
         id: build
         run: poetry build
-        if: steps.pytest.outcome == 'success' && steps.mypy.outcome == 'success' && steps.pylint.outcome == 'success' && steps.coverage.outcome == 'success' && github.event_name == 'push'
+        if: steps.pytest.outcome == 'success' && steps.mypy.outcome == 'success' && steps.ruff.outcome == 'success' && steps.coverage.outcome == 'success' && github.event_name == 'push'
 
       - name: Authorize GitHub Actions to publish on PYPI
         run: poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}

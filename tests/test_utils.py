@@ -10,10 +10,11 @@ import pytest
 
 from libretro_finder.utils import hash_file, match_arrays, recursive_hash
 from tests import TEST_BYTES, TEST_SAMPLE_SIZE
-
+from tests.fixtures import setup_files # noqa: F401
 
 def test_libretro_meta_import():
     """verifies that (remote) libretro-database can pulled, parsed and dumped to pandas DataFrame"""
+    from config import SYSTEMS # noqa: F401 PLC0415
 
 
 class TestHashFile:
