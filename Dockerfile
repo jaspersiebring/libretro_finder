@@ -1,4 +1,4 @@
-FROM python:3.9.18-bookworm
+FROM python:3.9-bullseye
 
 # wxPython dependencies
 RUN apt-get update && apt install -y \
