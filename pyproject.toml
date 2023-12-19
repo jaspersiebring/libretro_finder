@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "libretro-finder"
-version = "0.3.0"
+version = "0.3.1"
 description = "Simple tool that finds and prepares your BIOS files for usage with Libretro (or its RetroArch frontend)."
 authors = ["Jasper Siebring <j.siebring92@gmail.com>"]
 license = "GNU General Public License v3.0"
@@ -14,12 +14,23 @@ packages = [
 [tool.poetry.scripts]
 libretro_finder = "libretro_finder.main:main"
 
+[[tool.poetry.source]]
+name = "extras-wxpython-2204"
+url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04/"
+priority = "supplemental"
+
+[[tool.poetry.source]]
+name = "extras-wxpython-2004"
+url = "https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/"
+priority = "supplemental"
+
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
 gooey = "^1.0.8.1"
 pandas = "^2.1.4"
 tqdm = "^4.66.1"
 vdf = "^3.4"
+wxpython = "^4.2.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
