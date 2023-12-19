@@ -19,33 +19,25 @@ if not FILE_PATH.exists():
     print("Done.")
 
 # Parsing Libretro's system.dat and formatting as pandas dataframe
-index = 0  # pylint: disable=invalid-name
-
 system_series = []
 with open(FILE_PATH, "r", encoding="utf-8") as file:
     for line in file:
         line = line.strip()
         if line.startswith("comment"):
             current_system = line.split('"')[1]
-        elif line.startswith("rom"):
-            match = re.search(
-                r"name (\S+)(?: size (\S+))?(?: crc (\S+))?(?: md5 (\S+))?(?: sha1 (\S+))?",
-                line,
-            )
-            if match:
-                data = {
-                    "system": current_system,
-                    "name": match.group(1).replace('"', "").replace("'", ""),
-                    "size": match.group(2) if match.group(2) else None,
-                    "crc": match.group(3) if match.group(3) else None,
-                    "md5": match.group(4) if match.group(4) else None,
-                    "sha1": match.group(5) if match.group(5) else None,
-                }
-                system_series.append(pd.DataFrame(data, index=[index]))
-                index += 1
+            continue
+        
+        regex_string = r'\brom.+name\s+(?P<name>"[^"]+"|\S+)(?:(?:(?:\s+size\s+(?P<size>\S+))|(?:\s+crc\s+(?P<crc>\S+))|(?:\s+md5\s+(?P<md5>\S+))|(?:\s+sha1\s+(?P<sha1>\S+)))(?=\s|$))*'
+        match = re.search(regex_string, line)
+        
+        if match:
+            data = match.groupdict()
+            data["system"] = current_system
+            data["name"] = data["name"].replace('"', "")
+            system_series.append(data)
 
 # join dfs and drop features without checksums
-SYSTEMS = pd.concat(system_series)
+SYSTEMS = pd.DataFrame(system_series)
 SYSTEMS = SYSTEMS[~SYSTEMS["md5"].isnull()].reset_index(drop=True)
 
 # path to retroarch/system (if found)

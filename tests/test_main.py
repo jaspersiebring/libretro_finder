@@ -3,13 +3,12 @@ import pathlib
 import pytest
 import numpy as np
 from pytest import MonkeyPatch
-from pytest_mock import MockerFixture, mocker  # pylint: disable=unused-import
+from pytest_mock import MockerFixture, mocker  # noqa: F401
 
 from libretro_finder.main import organize, main
 from libretro_finder.utils import hash_file
 from tests import TEST_SAMPLE_SIZE
-from tests.fixtures import setup_files  # pylint: disable=unused-import
-
+from tests.fixtures import setup_files # noqa: F401
 
 class TestOrganize:
     """Bundle of pytest asserts for main.organize"""
