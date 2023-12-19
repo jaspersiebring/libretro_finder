@@ -63,7 +63,7 @@ jobs:
         run: poetry run mypy libretro_finder/ config/ tests/
       - name: Running ruff
         id: ruff
-        run: $ poetry run ruff check libretro_finder/ config/ tests/
+        run: poetry run ruff check libretro_finder/ config/ tests/
       - name: Checking code coverage
         id: coverage
         run: poetry run pytest --cov=config --cov=libretro_finder --cov-fail-under=75
