@@ -16,7 +16,7 @@ This repository does **NOT** include the BIOS files themselves.
 - Simple graphical user interface (GUI)
 - Scriptable command line interface (CLI)
 - Works on Windows, Linux and MacOS
-- Available through the Python Package Index (Python >=3.8) 
+- Available through the Python Package Index (Python >=3.9) 
 - Available as portable executable (no installation required)
 
 
